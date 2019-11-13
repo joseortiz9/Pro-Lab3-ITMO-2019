@@ -2,8 +2,7 @@ package ru.students.lab;
 
 public enum Planets {
     Earth("Земля", 1000),
-    Moon("Луна", 2000),
-    Mercury("Mercury", 3000);
+    Moon("Луна", 2000);
 
     private final String planet;
     private final int distanceFromSun;

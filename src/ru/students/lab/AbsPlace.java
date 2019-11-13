@@ -3,19 +3,25 @@ package ru.students.lab;
 import java.util.ArrayList;
 
 public abstract class AbsPlace {
+
     private String name;
-    private Coordinate coordinates;
-    //private ArrayList
-    private AbsPlace(String name, Coordinate coordinates) {
+    private ArrayList<Thing> things;
+
+    public AbsPlace(String name) {
         this.name = name;
-        this.coordinates = coordinates;
+        this.things = new ArrayList<>();
     }
 
-    private String getName() {
+    public AbsPlace(String name, ArrayList<Thing> things) {
+        this.name = name;
+        this.things = things;
+    }
+
+    public String getName() {
         return name;
     }
 
-    public double[] getCoordinates() {
-        return coordinates.getCoordinate();
+    public void addThing(Thing thing) {
+        things.add(thing);
     }
 }
