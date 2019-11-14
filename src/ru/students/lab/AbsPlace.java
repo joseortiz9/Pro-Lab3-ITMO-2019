@@ -18,10 +18,10 @@ public abstract class AbsPlace {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void addThing(Thing thing) {
-        things.add(thing);
+        this.things.add(thing);
     }
 }

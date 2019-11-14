@@ -4,11 +4,12 @@ public class Main {
 
     public static void main(String[] args) {
 	    System.out.println();
-        Thing donnut = new Thing("что-то", "food");
+        Thing anyFood = new Thing("что-то", "food");
 	    Place controlRoom = new Place("диспетчерская");
 	    Place dinningRoom = new Place("пищевой отсек");
-	    dinningRoom.addThing(donnut);
-	    Vehicle rocket = new Vehicle(TypeVehicle.Rocket, 12);
+	    dinningRoom.addThing(anyFood);
+	    Trajectory earthToMoon = new Trajectory(Planets.Earth, Planets.Moon);
+	    Rocket rocket = new Rocket(TypeVehicle.Rocket, 12, earthToMoon);
 	    rocket.addRoom(controlRoom);
 	    rocket.addRoom(dinningRoom);
 	    Human unknown = new Human("Незнайка", controlRoom);
@@ -18,11 +19,16 @@ public class Main {
 	    unknown.printLocation();
 	    unknown.sees(Planets.Moon);
 	    unknown.usesOrgan(Organs.Eyes);
-	    //if (rocket.getActualTime() > 2)
+	    rocket.addTimElapsed(3);
+		rocket.printMovement();
+		rocket.printTrajectory();
+	    unknown.knows(false);
+		rocket.isNearDestiny();
+	    if (rocket.getTimElapsed() > (2*60))
 	    	unknown.usesOrgan(Organs.Stomach);
 	    unknown.moves(dinningRoom);
 		dunno.wakeUp();
 	    unknown.sees(dunno);
-	    dunno.eats(donnut);
+	    dunno.eats(anyFood);
     }
 }

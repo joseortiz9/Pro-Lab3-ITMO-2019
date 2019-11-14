@@ -27,6 +27,12 @@ public class Human implements InterHuman, InterStandardFunctions {
     }
 
     @Override
+    public void knows(boolean know) {
+        String possible = (know) ? " " : " doesn't";
+        System.out.print(this.getName() + possible + " know that ");
+    }
+
+    @Override
     public void sees(Object obj) {
         System.out.println(getName() + " sees " + obj.toString());
     }
@@ -51,21 +57,9 @@ public class Human implements InterHuman, InterStandardFunctions {
         }
     }
 
-    public String getName() {
-        return this.name;
-    }
-
-    public String getActualPlace() {
-        return actualPlace.getName();
-    }
-
     public void wakeUp() {
         this.awake = true;
         System.out.println(getName() + " wakes up");
-    }
-
-    public boolean isAwake() {
-        return this.awake;
     }
 
     public void printLocation() {
@@ -76,6 +70,18 @@ public class Human implements InterHuman, InterStandardFunctions {
     public void moves(Place nextPlace) {
         this.actualPlace = nextPlace;
         System.out.println(getName() + " moves to " + nextPlace.getName());
+    }
+
+    public boolean isAwake() {
+        return this.awake;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getActualPlace() {
+        return actualPlace.getName();
     }
 
     @Override

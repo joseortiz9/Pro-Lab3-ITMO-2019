@@ -5,36 +5,51 @@ import java.util.ArrayList;
 public abstract class AbsVehicle {
 
     private TypeVehicle typeVehicle;
-    private ArrayList<Place> rooms;
     private int velocity;
+    private int distanceTraveled;
+    private int timElapsed;
 
     public AbsVehicle(TypeVehicle typeVehicle) {
         this.typeVehicle = typeVehicle;
-        this.rooms = new ArrayList<>();
         this.velocity = 0;
+        this.distanceTraveled = 0;
+        this.timElapsed = 0;
     }
 
     public AbsVehicle(TypeVehicle typeVehicle, int velocity) {
         this.typeVehicle = typeVehicle;
         this.velocity = velocity;
-        this.rooms = new ArrayList<>();
+        this.distanceTraveled = 0;
+        this.timElapsed = 0;
     }
 
-    public AbsVehicle(TypeVehicle typeVehicle, int velocity, ArrayList<Place> rooms) {
-        this.typeVehicle = typeVehicle;
-        this.velocity = velocity;
-        this.rooms = rooms;
+    public void moveForward() {
+        this.distanceTraveled +=  this.getTimElapsed() * this.getVelocity();
+    }
+
+    public void addTimElapsed(double hours) {
+        this.timElapsed += hours * 60;
+        this.moveForward();
+        System.out.println("Passed " + hours + " hours");
     }
 
     public TypeVehicle getTypeVehicle() {
-        return typeVehicle;
+        return this.typeVehicle;
     }
 
-    public String getVelocity() {
-        return velocity + "km/s";
+    public int getTimElapsed() {
+        return this.timElapsed;
     }
 
-    public void addRoom(Place room) {
-        rooms.add(room);
+    public int getDistanceTraveled() {
+        return distanceTraveled;
+    }
+
+    public int getVelocity() {
+        return this.velocity;
+    }
+
+    public String getVelocityStr() {
+        return this.velocity + "km/s";
     }
 }
