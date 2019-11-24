@@ -1,6 +1,6 @@
 package ru.students.lab;
 
-public class Trajectory implements InterStandardFunctions {
+public class Trajectory {
 
     private Planets origin;
     private Planets destiny;
@@ -28,16 +28,22 @@ public class Trajectory implements InterStandardFunctions {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return this.getOrigin().toString().hashCode() + this.getDestiny().toString().hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        if (obj == null)
+            return false;
+        if (!(obj instanceof Trajectory))
+            return false;
+        if (obj == this)
+            return true;
+        return this.hashCode() == obj.hashCode();
     }
 
     @Override
     public String toString() {
-        return "Total Trajectory: " + this.calcDistance() + "Km";
+        return "Total Trajectory to Destiny: " + this.calcDistance() + "Km";
     }
 }

@@ -1,15 +1,18 @@
 package ru.students.lab;
 
-public class Thing implements InterStandardFunctions {
+public class Thing implements InterThing {
     private String name;
     private String type;
+    private int amount;
 
-    public Thing(String name) {
+    public Thing(String name, int amount) {
         this.name = name;
+        this.amount = amount;
     }
-    public Thing(String name, String type) {
+    public Thing(String name, String type, int amount) {
         this.name = name;
         this.type = type;
+        this.amount = amount;
     }
 
     public boolean isType(String type) {
@@ -17,17 +20,41 @@ public class Thing implements InterStandardFunctions {
     }
 
     public String getName() {
-        return name;
+        return this.name;
+    }
+
+    public int getAmount() {
+        return this.amount;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public void decreaseAmount(){
+        this.amount--;
+    }
+
+    @Override
+    public boolean existing() {
+        return this.amount > 0;
     }
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return this.getName().hashCode() + this.getAmount();
     }
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        if (obj == null)
+            return false;
+        if (!(obj instanceof Thing))
+            return false;
+        if (obj == this)
+            return true;
+        return this.hashCode() == obj.hashCode();
     }
 
     @Override

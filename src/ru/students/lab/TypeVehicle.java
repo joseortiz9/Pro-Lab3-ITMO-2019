@@ -1,7 +1,7 @@
 package ru.students.lab;
 
 public enum TypeVehicle {
-    Rocket("Ракет"),
+    Rocket("Ракета"),
     Car("Машина");
 
     private final String name;

@@ -24,11 +24,11 @@ public abstract class AbsVehicle {
     }
 
     public void moveForward() {
-        this.distanceTraveled +=  this.getTimElapsed() * this.getVelocity();
+        this.distanceTraveled += this.getTimElapsed() * this.getVelocity();
     }
 
     public void addTimElapsed(double hours) {
-        this.timElapsed += hours * 60;
+        this.timElapsed += hours * 3600;
         this.moveForward();
         System.out.println("Passed " + hours + " hours");
     }

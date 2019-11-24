@@ -21,6 +21,10 @@ public abstract class AbsPlace {
         return this.name;
     }
 
+    public ArrayList<Thing> getThings() {
+        return things;
+    }
+
     public void addThing(Thing thing) {
         this.things.add(thing);
     }

@@ -2,7 +2,7 @@ package ru.students.lab;
 
 import java.util.ArrayList;
 
-public class Place extends AbsPlace implements InterStandardFunctions {
+public class Place extends AbsPlace {
 
     public Place(String name) {
         super(name);
@@ -14,12 +14,18 @@ public class Place extends AbsPlace implements InterStandardFunctions {
 
     @Override
     public int hashCode() {
-        return super.hashCode();
+        return this.getName().hashCode() + this.getThings().size();
     }
 
     @Override
     public boolean equals(Object obj) {
-        return super.equals(obj);
+        if (obj == null)
+            return false;
+        if (!(obj instanceof Place))
+            return false;
+        if (obj == this)
+            return true;
+        return this.hashCode() == obj.hashCode();
     }
 
     @Override
