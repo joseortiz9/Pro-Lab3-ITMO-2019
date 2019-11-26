@@ -1,11 +1,11 @@
 package ru.students.lab;
 
-public enum TypeVehicle {
-    Rocket("Ракета"),
-    Car("Машина");
+public enum TypeThings {
+    Food("Еда"),
+    Computer("Компьютер");
 
     private final String name;
-    TypeVehicle(String name) {
+    TypeThings(String name) {
         this.name = name;
     }
 

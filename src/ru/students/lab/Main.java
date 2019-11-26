@@ -4,38 +4,36 @@ public class Main {
 
     public static void main(String[] args) {
 		System.out.println();
-		Thing anyFood = new Thing("что-то", "food", 5);
+		Thing anyFood = new Thing("что-то", TypeThings.Food, 5);
 		Place controlRoom = new Place("диспетчерская");
 		Place dinningRoom = new Place("пищевой отсек");
 		dinningRoom.addThing(anyFood);
 		Trajectory earthToMoon = new Trajectory(Planets.Earth, Planets.Moon);
-		Rocket rocket = new Rocket(TypeVehicle.Rocket, 12, earthToMoon);
+		Rocket rocket = new Rocket(TypeVehicles.Rocket, 12, earthToMoon);
 		rocket.addRoom(controlRoom);
 		rocket.addRoom(dinningRoom);
-		Human unknown = new Human("Незнайка", controlRoom, true, false);
-		Human dunno = new Human("Пончик", dinningRoom, false, true);
+		Human unknown = new Human("Незнайка", controlRoom, 2);
+		Human dunno = new Human("Пончик", dinningRoom, 5, false);
 
 		unknown.showStatus();
 		rocket.starts();
 		rocket.printTrajectory();
-		if (!rocket.isVelocityBig() && unknown.isAwake()) {
-			unknown.thinks(rocket.isNearDestiny());
-			unknown.sees("like the "+ rocket.getTypeVehicle().toString() +" has no velocity");
-		}
 		unknown.printLocation();
-		if (unknown.isAwake()) {
-			unknown.sees(Planets.Moon);
-			unknown.usesOrgan(Organs.Eyes);
+		if (!rocket.isVelocityBig()) {
+			unknown.sees(rocket.getVelocity(), null);
+			rocket.printLocation();
 		}
-		rocket.addTimElapsed(3);
+		unknown.sees(Planets.Moon, null);
+		//unknown.sees(Planets.Moon, dunno);
+		int timeElapsedOfTravel = 3;
+		rocket.addTimElapsed(timeElapsedOfTravel);
 		rocket.printMovement();
 	    if (rocket.getTimElapsed() > (2*3600)) {
-			unknown.changeHungry();
-			unknown.usesOrgan(Organs.Stomach);
-			unknown.wakeUp();
+			if (unknown.isTimeToEat(timeElapsedOfTravel))
+				unknown.feels(Feelings.Hunger);
 			unknown.moves(dinningRoom);
-			dunno.wakeUp();
-			unknown.sees(dunno);
+			dunno.wakesUp();
+			unknown.sees(dunno, null);
 			dunno.eats(anyFood);
 		}
     }

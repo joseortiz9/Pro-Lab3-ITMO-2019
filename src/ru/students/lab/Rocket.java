@@ -2,31 +2,31 @@ package ru.students.lab;
 
 import java.util.ArrayList;
 
-public class Rocket extends AbsVehicle {
+public class Rocket extends AbsVehicle implements InterUtilities{
 
     private ArrayList<Place> rooms;
     private Trajectory trajectory;
 
-    public Rocket(TypeVehicle typeVehicle) {
-        super(typeVehicle);
+    public Rocket(TypeVehicles typeVehicles) {
+        super(typeVehicles);
         this.rooms = new ArrayList<>();
         this.trajectory = null;
     }
 
-    public Rocket(TypeVehicle typeVehicle, int velocity) {
-        super(typeVehicle, velocity);
+    public Rocket(TypeVehicles typeVehicles, int velocity) {
+        super(typeVehicles, velocity);
         this.rooms = new ArrayList<>();
         this.trajectory = null;
     }
 
-    public Rocket(TypeVehicle typeVehicle, int velocity, Trajectory trajectory) {
-        super(typeVehicle, velocity);
+    public Rocket(TypeVehicles typeVehicles, int velocity, Trajectory trajectory) {
+        super(typeVehicles, velocity);
         this.trajectory = trajectory;
         this.rooms = new ArrayList<>();
     }
 
-    public Rocket(TypeVehicle typeVehicle, int velocity, Trajectory trajectory, ArrayList<Place> rooms) {
-        super(typeVehicle, velocity);
+    public Rocket(TypeVehicles typeVehicles, int velocity, Trajectory trajectory, ArrayList<Place> rooms) {
+        super(typeVehicles, velocity);
         this.trajectory = trajectory;
         this.rooms = rooms;
     }
@@ -40,23 +40,24 @@ public class Rocket extends AbsVehicle {
     }
 
     public void starts() {
-        System.out.println(this.toString() + " rushes with a velocity of " + this.getVelocityStr());
+        System.out.println(this.toString() + " rushes with a velocity of " + this.getVelocity().toString());
     }
 
     //If the velocity is enought to arrive in less than an hour
     public boolean isVelocityBig() {
-        return this.getVelocity() > getTrajectory().calcDistance() / 60;
+        return this.getVelocity().getValue() > getTrajectory().calcDistance() / 60;
     }
 
     public boolean overMiddleOfPath() {
         return this.getDistanceTraveled() > this.getTrajectory().calcDistance() / 2;
     }
 
-    public String isNearDestiny() {
-        if (this.overMiddleOfPath())
-            return this.toString() + " is getting near to Destiny!";
+    @Override
+    public void printLocation() {
+        if (overMiddleOfPath())
+            System.out.println(this.toString() + " is getting near to Destiny!");
         else
-            return this.toString() + " haven't advance even a finger!";
+            System.out.println(this.toString() + " hasn't advance even a finger!");
     }
 
     public void printMovement() {
@@ -69,7 +70,7 @@ public class Rocket extends AbsVehicle {
 
     @Override
     public int hashCode() {
-        return this.getTypeVehicle().toString().hashCode() + this.getVelocity() + this.getDistanceTraveled();
+        return this.getTypeVehicles().toString().hashCode() + this.getVelocity().getValue() + this.getDistanceTraveled();
     }
 
     @Override
@@ -85,7 +86,7 @@ public class Rocket extends AbsVehicle {
 
     @Override
     public String toString() {
-        return super.getTypeVehicle().toString();
+        return super.getTypeVehicles().toString();
     }
 }
 

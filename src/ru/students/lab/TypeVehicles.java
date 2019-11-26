@@ -1,11 +1,11 @@
 package ru.students.lab;
 
-public enum Organs {
-    Stomach("Stomach"),
-    Eyes("Eyes");
+public enum TypeVehicles {
+    Rocket("Ракета"),
+    Car("Машина");
 
     private final String name;
-    Organs(String name) {
+    TypeVehicles(String name) {
         this.name = name;
     }
 

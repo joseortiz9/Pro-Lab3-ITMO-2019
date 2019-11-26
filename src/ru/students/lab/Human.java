@@ -3,77 +3,104 @@ package ru.students.lab;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Human implements InterCreature {
+public class Human implements InterCreature, InterActions, InterSenses, InterUtilities {
 
     private String name;
-    private ArrayList<Organs> organs;
+    private int timeSinceLastFood;
+    private ArrayList<Feelings> feelings;
     private Place actualPlace;
     private boolean awake;
-    private boolean hungry;
 
-    public Human(String name, Place place) {
+    public Human(String name, Place place, int timeSinceLastFood) {
         this.name = name;
         this.actualPlace = place;
-        this.organs = new ArrayList<>(Arrays.asList(Organs.values()));
+        this.timeSinceLastFood = timeSinceLastFood;
+        this.feelings = new ArrayList<>(Arrays.asList(Feelings.values()));
         this.awake = true;
-        this.hungry = false;
     }
 
-    public Human(String name, Place place, boolean awake, boolean hungry) {
+    public Human(String name, Place place, int timeSinceLastFood, boolean awake) {
         this.name = name;
         this.actualPlace = place;
-        this.organs = new ArrayList<>(Arrays.asList(Organs.values()));
-        this.organs.add(Organs.Eyes);
-        this.organs.add(Organs.Stomach);
+        this.timeSinceLastFood = timeSinceLastFood;
+        this.feelings = new ArrayList<>(Arrays.asList(Feelings.values()));
         this.awake = awake;
-        this.hungry = hungry;
     }
 
-    public boolean isHungry() {
-        return hungry;
-    }
 
-    public void changeHungry () {
-        this.hungry = !this.hungry;
+    @Override
+    public int getTimeSinceLastFood() {
+        return this.timeSinceLastFood;
     }
 
     @Override
-    public void thinks(String whatThinks) {
-        System.out.println(this.getName() + " thinks that " + whatThinks);
+    public boolean isTimeToEat(int timeElapsed) {
+        return this.getTimeSinceLastFood() + timeElapsed >= 5;
     }
 
+
     @Override
-    public void sees(Object obj) {
-        System.out.println(getName() + " sees " + obj.toString());
+    public void changeFeeling(Feelings feeling) {
+        if (this.getFeelings().contains(feeling)) {
+            feeling.changeIsFelt();
+            int indFeeling = this.getFeelings().indexOf(feeling);
+            this.getFeelings().set(indFeeling, feeling);
+        }
     }
+
+    public ArrayList<Feelings> getFeelings() {
+        return feelings;
+    }
+
 
     @Override
     public void eats(Thing thing) {
-        if (thing.isType("food") && thing.existing()) {
+        if (thing.isType(TypeThings.Food) && thing.existing()) {
             System.out.println(getName() + " eats " + thing.toString());
             thing.decreaseAmount();
-            changeHungry();
+            this.feels(Feelings.Satisfied);
+            this.changeFeeling(Feelings.Hunger);
         }
         else
-            System.out.println("There is no "+ thing.getName());
+            System.out.println("There is no more "+ thing.getName());
     }
 
+
     @Override
-    public void usesOrgan(Organs organ) {
-        switch(organ) {
-            case Eyes:
-                System.out.println(getName() + " gets interested");
-            break;
-            case Stomach:
-                System.out.println(getName() + " feels hunger");
-            break;
-            default:
-                System.out.println(" Feeling Things");
+    public void sees(Object objToSee, Object objInterrupt) {
+        if (!this.isAwake())
+            System.out.println(this.getName() + " can not see " +
+                    objToSee.toString() + " because is sleeping" /*+ this.getStatus()*/);
+        else {
+            if (objInterrupt != null)
+                System.out.println(this.getName() + " can not see " +
+                        objToSee.toString() + " because has " +
+                        objInterrupt.toString() + " in the middle");
+            else {
+                if (objToSee.equals(Planets.Moon)) {
+                    System.out.println(this.getName() + " saw the " + objToSee.toString());
+                    this.feels(Feelings.Interest);
+                }
+                else if (objToSee instanceof Velocity) {
+                    System.out.println(this.getName() + " can not see the Velocity of " + objToSee.toString());
+                    this.feels(Feelings.Stagnation);
+                }
+                else
+                    System.out.println(this.getName() + " sees the " + objToSee.toString());
+            }
         }
     }
 
+
     @Override
-    public void wakeUp() {
+    public void feels(Feelings feeling) {
+        this.changeFeeling(feeling);
+        System.out.println(this.getName() + feeling.getTextFeeling());
+    }
+
+
+    @Override
+    public void wakesUp() {
         if (!this.isAwake()) {
             this.awake = true;
             System.out.println(getName() + " wakes up");

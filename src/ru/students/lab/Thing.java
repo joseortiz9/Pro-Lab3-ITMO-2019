@@ -2,33 +2,13 @@ package ru.students.lab;
 
 public class Thing implements InterThing {
     private String name;
-    private String type;
+    private TypeThings type;
     private int amount;
 
-    public Thing(String name, int amount) {
-        this.name = name;
-        this.amount = amount;
-    }
-    public Thing(String name, String type, int amount) {
+    public Thing(String name, TypeThings type, int amount) {
         this.name = name;
         this.type = type;
         this.amount = amount;
-    }
-
-    public boolean isType(String type) {
-        return this.type.equals(type);
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public int getAmount() {
-        return this.amount;
-    }
-
-    public String getType() {
-        return type;
     }
 
     @Override
@@ -39,6 +19,22 @@ public class Thing implements InterThing {
     @Override
     public boolean existing() {
         return this.amount > 0;
+    }
+
+    public boolean isType(TypeThings type) {
+        return this.type.equals(type);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public TypeThings getType() {
+        return type;
+    }
+
+    public int getAmount() {
+        return this.amount;
     }
 
     @Override

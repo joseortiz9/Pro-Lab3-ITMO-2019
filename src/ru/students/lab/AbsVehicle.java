@@ -1,40 +1,38 @@
 package ru.students.lab;
 
-import java.util.ArrayList;
-
 public abstract class AbsVehicle {
 
-    private TypeVehicle typeVehicle;
-    private int velocity;
+    private TypeVehicles typeVehicles;
+    private Velocity velocity;
     private int distanceTraveled;
     private int timElapsed;
 
-    public AbsVehicle(TypeVehicle typeVehicle) {
-        this.typeVehicle = typeVehicle;
-        this.velocity = 0;
+    public AbsVehicle(TypeVehicles typeVehicles) {
+        this.typeVehicles = typeVehicles;
+        this.velocity = new Velocity();
         this.distanceTraveled = 0;
         this.timElapsed = 0;
     }
 
-    public AbsVehicle(TypeVehicle typeVehicle, int velocity) {
-        this.typeVehicle = typeVehicle;
-        this.velocity = velocity;
+    public AbsVehicle(TypeVehicles typeVehicles, int velocity) {
+        this.typeVehicles = typeVehicles;
+        this.velocity = new Velocity(velocity);
         this.distanceTraveled = 0;
         this.timElapsed = 0;
     }
 
     public void moveForward() {
-        this.distanceTraveled += this.getTimElapsed() * this.getVelocity();
+        this.distanceTraveled += this.getTimElapsed() * this.getVelocity().getValue();
     }
 
     public void addTimElapsed(double hours) {
         this.timElapsed += hours * 3600;
         this.moveForward();
-        System.out.println("Passed " + hours + " hours");
+        System.out.println("Passed " + hours + " hours inside " + this.getTypeVehicles().toString());
     }
 
-    public TypeVehicle getTypeVehicle() {
-        return this.typeVehicle;
+    public TypeVehicles getTypeVehicles() {
+        return this.typeVehicles;
     }
 
     public int getTimElapsed() {
@@ -45,11 +43,7 @@ public abstract class AbsVehicle {
         return distanceTraveled;
     }
 
-    public int getVelocity() {
+    public Velocity getVelocity() {
         return this.velocity;
-    }
-
-    public String getVelocityStr() {
-        return this.velocity + "km/s";
     }
 }
