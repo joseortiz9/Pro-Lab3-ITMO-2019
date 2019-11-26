@@ -12,8 +12,8 @@ public class Main {
 		Rocket rocket = new Rocket(TypeVehicles.Rocket, 12, earthToMoon);
 		rocket.addRoom(controlRoom);
 		rocket.addRoom(dinningRoom);
-		Human unknown = new Human("Незнайка", controlRoom, 2);
-		Human dunno = new Human("Пончик", dinningRoom, 5, false);
+		Human unknown = new Human("Незнайка", controlRoom, 5);
+		Human dunno = new Human("Пончик", dinningRoom, -5, false);
 
 		unknown.showStatus();
 		rocket.starts();
@@ -25,7 +25,7 @@ public class Main {
 		}
 		unknown.sees(Planets.Moon, null);
 		//unknown.sees(Planets.Moon, dunno);
-		int timeElapsedOfTravel = 3;
+		int timeElapsedOfTravel = 9;
 		rocket.addTimElapsed(timeElapsedOfTravel);
 		rocket.printMovement();
 	    if (rocket.getTimElapsed() > (2*3600)) {

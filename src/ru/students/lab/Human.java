@@ -6,36 +6,43 @@ import java.util.Arrays;
 public class Human implements InterCreature, InterActions, InterSenses, InterUtilities {
 
     private String name;
-    private int timeSinceLastFood;
+    private int timeLastFood;
     private ArrayList<Feelings> feelings;
     private Place actualPlace;
     private boolean awake;
 
-    public Human(String name, Place place, int timeSinceLastFood) {
+    public Human(String name, Place place, int timeLastFood) {
         this.name = name;
         this.actualPlace = place;
-        this.timeSinceLastFood = timeSinceLastFood;
+        this.timeLastFood = timeLastFood;
         this.feelings = new ArrayList<>(Arrays.asList(Feelings.values()));
         this.awake = true;
     }
 
-    public Human(String name, Place place, int timeSinceLastFood, boolean awake) {
+    public Human(String name, Place place, int timeLastFood, boolean awake) {
         this.name = name;
         this.actualPlace = place;
-        this.timeSinceLastFood = timeSinceLastFood;
+        this.timeLastFood = timeLastFood;
         this.feelings = new ArrayList<>(Arrays.asList(Feelings.values()));
         this.awake = awake;
     }
 
 
     @Override
-    public int getTimeSinceLastFood() {
-        return this.timeSinceLastFood;
+    public void setTimeLastFood(int timeLastFood) {
+        this.timeLastFood = timeLastFood;
     }
 
     @Override
+    public int getTimeLastFood() {
+        return this.timeLastFood;
+    }
+
+    //The rocket is the time zero, so timeLastFood depends on how much hours before
+    //or after the rocket's rush the person ate. For a better explanation see image in docs
+    @Override
     public boolean isTimeToEat(int timeElapsed) {
-        return this.getTimeSinceLastFood() + timeElapsed >= 5;
+        return timeElapsed - this.getTimeLastFood()  >= 5;
     }
 
 
