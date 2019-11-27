@@ -14,22 +14,54 @@ public class VisionManager {
     public boolean elementInsideDomain (Coordinate objInterruptCoords) {
         VisionFunc tempObjsFunc = new VisionFunc(objInterruptCoords, this.getObjCoords());
 
-        if(this.getMainFunc().equals(tempObjsFunc)) {
+        if (mainFunc.calcDeltaX() == 0) {
+            int yToEvaluate = (int) this.getHumanCoords().getY();
+            int endPToEvaluate = (int) this.getObjCoords().getY();
+
+            if (getMainFunc().positiveFunc()) {
+                while (yToEvaluate < endPToEvaluate) {
+                    if (this.getHumanCoords().getX() == getMainFunc().getSlope() &&
+                            yToEvaluate == (int)objInterruptCoords.getY())
+                        return true;
+
+                    yToEvaluate++;
+                }
+            }
+            else {
+                while (yToEvaluate > endPToEvaluate) {
+                    if (this.getHumanCoords().getX() == getMainFunc().getSlope() &&
+                            yToEvaluate == (int)objInterruptCoords.getY())
+                        return true;
+
+                    yToEvaluate--;
+                }
+            }
+        }
+        else if(this.getMainFunc().equals(tempObjsFunc)) {
             System.out.println("MAIN " + getMainFunc().toString());
             System.out.println(tempObjsFunc.toString());
-            int startPToEvaluate = (int) this.getHumanCoords().getX() + 1; //not count the human
+            int xToEvaluate = (int) this.getHumanCoords().getX() + 1; //not count the human
             int endPToEvaluate = (int) this.getObjCoords().getX();
 
-            if (this.getMainFunc().positiveFunc()) {
-                for (int x = startPToEvaluate; x < endPToEvaluate; x++) {
-                    if (x == (int) objInterruptCoords.getX()
-                            && this.getMainFunc().getYFromFunction(x) == objInterruptCoords.getY())
+            System.out.println(getMainFunc().positiveFunc());
+
+            if (getMainFunc().positiveFunc()) {
+                while (xToEvaluate < endPToEvaluate) {
+                    System.out.println(xToEvaluate);
+                    if (xToEvaluate == (int)objInterruptCoords.getX()
+                            && this.getMainFunc().getYFromFunction(xToEvaluate) == objInterruptCoords.getY())
                         return true;
+
+                    xToEvaluate++;
                 }
-            } else {
-                for (int x = startPToEvaluate; x < endPToEvaluate; x--) {
-                    if (this.getMainFunc().getYFromFunction(x) == objInterruptCoords.getY() && x == objInterruptCoords.getX())
+            }
+            else {
+                while (xToEvaluate > endPToEvaluate) {
+                    if (xToEvaluate == (int)objInterruptCoords.getX()
+                            && this.getMainFunc().getYFromFunction(xToEvaluate) == objInterruptCoords.getY())
                         return true;
+
+                    xToEvaluate--;
                 }
             }
         }

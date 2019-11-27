@@ -67,6 +67,7 @@ public class Human implements InterCreature, InterActions, InterLocationUtilitie
             System.out.println(thing.getName() + " is not in this room!");
     }
 
+
     public InterLocationUtilities getObjInterrupting(InterLocationUtilities objToSee) {
         try {
             this.visionManager = new VisionManager(this.getLocation(), objToSee.getLocation());
@@ -82,18 +83,36 @@ public class Human implements InterCreature, InterActions, InterLocationUtilitie
         return null;
     }
 
+
     public void sees(InterLocationUtilities objToSee) {
-        InterLocationUtilities objInterrupting = getObjInterrupting(objToSee);
-        if (objInterrupting == null)
-            System.out.println(this.getName() + " sees " + objToSee.toString());
-        else if (objInterrupting.getClass() == Thing.class &&
-                ((Thing) objInterrupting).isCanSeeThrough()) {
-                System.out.println(this.getName() + " sees " + objToSee.toString() +
-                        " through " + objInterrupting.toString());
+        if (this.canSeeObj(objToSee)) {
+            InterLocationUtilities objInterrupting = getObjInterrupting(objToSee);
+            if (objInterrupting == null)
+                if (objToSee.getClass() == Planet.class)
+                    System.out.println(this.getName() + " only can see " + objToSee.toString() + " through " + TypeThings.WINDOW);
+                else
+                    System.out.println(this.getName() + " sees " + objToSee.toString());
+            else if (objInterrupting.getClass() == Thing.class &&
+                    ((Thing) objInterrupting).isCanSeeThrough()) {
+                    System.out.println(this.getName() + " sees " + objToSee.toString() +
+                            " through " + objInterrupting.toString());
+            } else
+                System.out.println(this.getName() + " can not see " + objToSee.toString() +
+                        " because " + objInterrupting.toString() + " is in the middle");
         } else
-            System.out.println(this.getName() + " can not see " + objToSee.toString() +
-                    " because " + objInterrupting.toString() + " is in the middle");
+            System.out.println();
     }
+
+
+    public boolean canSeeObj(InterLocationUtilities objToSee) {
+        if (objToSee.getClass() == Human.class)
+            return this.getActualPlace().equals(((Human) objToSee).getActualPlace());
+        else if (objToSee.getClass() == Thing.class)
+            return this.getActualPlace().getThings().contains(((Thing) objToSee));
+        else
+            return true;
+    }
+
 
     @Override
     public void feels(TypesFeelings feeling) {

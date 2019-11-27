@@ -46,14 +46,14 @@ public class Main {
 			System.out.println(unknown.getName() + " thinks " + rocket.getTypeVehicles().toString() + " has " + MovingState.STAGNATION + " velocity");
 			rocket.printLocation();
 		}
-		unknown.sees(computer1);
-		unknown.feels(TypesFeelings.INTEREST);
+		unknown.sees(earth);
+		//unknown.feels(TypesFeelings.INTEREST);
 		int timeElapsedOfTravel = 7;
 		rocket.addTimElapsed(timeElapsedOfTravel);
 		rocket.printMovement();
 	    if (rocket.getTrajectory().getTimElapsed() > (2*3600)) {
 	    	unknown.timeToEat(timeElapsedOfTravel);
-			unknown.moves(dinningRoom, new Coordinate(0,0));
+			//unknown.moves(dinningRoom, new Coordinate(0,0));
 			dunno.wakesUp();
 			unknown.sees(dunno);
 			dunno.eats(anyFood);

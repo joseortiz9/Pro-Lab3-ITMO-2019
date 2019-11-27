@@ -18,9 +18,18 @@ public class VisionFunc {
         this.b = this.calculateB();
     }
 
+    public double calDeltaY() {
+        return (this.getC2().getY() - this.getC1().getY());
+    }
+
+    public double calcDeltaX() {
+        return (this.getC2().getX() - this.getC1().getX());
+    }
+
     public double calculateSlope() {
-        return (this.getC2().getY() - this.getC1().getY()) /
-                (this.getC2().getX() - this.getC1().getX());
+        if (calcDeltaX() == 0)
+            return this.getC1().getX();
+        return calDeltaY() / calcDeltaX();
     }
 
     public double calculateB(){
@@ -32,7 +41,7 @@ public class VisionFunc {
     }
 
     public boolean positiveFunc() {
-        return this.getSlope() >= 0;
+        return this.getSlope() >= -0;
     }
 
     public Coordinate getC1() {
