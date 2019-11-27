@@ -1,5 +1,5 @@
 package ru.students.lab;
 
-public interface InterUtilities {
+public interface InterLocationUtilities {
     public void printLocation();
 }

@@ -1,8 +1,8 @@
 package ru.students.lab;
 
 public enum TypeThings {
-    Food("Еда"),
-    Computer("Компьютер");
+    FOOD("Еда"),
+    COMPUTER("Компьютер");
 
     private final String name;
     TypeThings(String name) {

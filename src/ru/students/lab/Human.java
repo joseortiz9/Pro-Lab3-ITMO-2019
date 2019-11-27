@@ -3,11 +3,11 @@ package ru.students.lab;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Human implements InterCreature, InterActions, InterSenses, InterUtilities {
+public class Human implements InterCreature, InterActions, InterSenses, InterLocationUtilities {
 
     private String name;
     private int timeLastFood;
-    private ArrayList<Feelings> feelings;
+    private ArrayList<Feeling> feelings;
     private Place actualPlace;
     private boolean awake;
 
@@ -15,7 +15,7 @@ public class Human implements InterCreature, InterActions, InterSenses, InterUti
         this.name = name;
         this.actualPlace = place;
         this.timeLastFood = timeLastFood;
-        this.feelings = new ArrayList<>(Arrays.asList(Feelings.values()));
+        this.feelings =  this.fillFeelings();
         this.awake = true;
     }
 
@@ -23,10 +23,9 @@ public class Human implements InterCreature, InterActions, InterSenses, InterUti
         this.name = name;
         this.actualPlace = place;
         this.timeLastFood = timeLastFood;
-        this.feelings = new ArrayList<>(Arrays.asList(Feelings.values()));
+        this.feelings =  this.fillFeelings();
         this.awake = awake;
     }
-
 
     @Override
     public void setTimeLastFood(int timeLastFood) {
@@ -47,16 +46,16 @@ public class Human implements InterCreature, InterActions, InterSenses, InterUti
 
 
     @Override
-    public void changeFeeling(Feelings feeling) {
-        if (this.getFeelings().contains(feeling)) {
+    public void changeFeeling(TypesFeelings feeling) {
+        if (this.getFeelings().contains()) {
             feeling.changeIsFelt();
             int indFeeling = this.getFeelings().indexOf(feeling);
             this.getFeelings().set(indFeeling, feeling);
         }
     }
 
-    public ArrayList<Feelings> getFeelings() {
-        return feelings;
+    public ArrayList<Feeling> getFeelings() {
+        return this.feelings;
     }
 
 
@@ -65,8 +64,8 @@ public class Human implements InterCreature, InterActions, InterSenses, InterUti
         if (thing.isType(TypeThings.Food) && thing.existing()) {
             System.out.println(getName() + " eats " + thing.toString());
             thing.decreaseAmount();
-            this.feels(Feelings.Satisfied);
-            this.changeFeeling(Feelings.Hunger);
+            this.feels(TypesFeelings.Satisfied);
+            this.changeFeeling(TypesFeelings.Hunger);
         }
         else
             System.out.println("There is no more "+ thing.getName());
@@ -86,11 +85,11 @@ public class Human implements InterCreature, InterActions, InterSenses, InterUti
             else {
                 if (objToSee.equals(Planets.Moon)) {
                     System.out.println(this.getName() + " saw the " + objToSee.toString());
-                    this.feels(Feelings.Interest);
+                    this.feels(TypesFeelings.Interest);
                 }
                 else if (objToSee instanceof Velocity) {
                     System.out.println(this.getName() + " can not see the Velocity of " + objToSee.toString());
-                    this.feels(Feelings.Stagnation);
+                    this.feels(TypesFeelings.Stagnation);
                 }
                 else
                     System.out.println(this.getName() + " sees the " + objToSee.toString());
@@ -100,7 +99,7 @@ public class Human implements InterCreature, InterActions, InterSenses, InterUti
 
 
     @Override
-    public void feels(Feelings feeling) {
+    public void feels(TypesFeelings feeling) {
         this.changeFeeling(feeling);
         System.out.println(this.getName() + feeling.getTextFeeling());
     }
@@ -116,7 +115,7 @@ public class Human implements InterCreature, InterActions, InterSenses, InterUti
 
 
     @Override
-    public void showStatus() {
+    public void printStatus() {
         if(!this.isAwake())
             System.out.println(getName() + " is sleeping");
         else
@@ -125,7 +124,7 @@ public class Human implements InterCreature, InterActions, InterSenses, InterUti
 
     @Override
     public void printLocation() {
-        System.out.println(getName() + " is in " + getActualPlace());
+        System.out.println(getName() + " is in " + getActualPlace().getName());
     }
 
     @Override
@@ -142,8 +141,8 @@ public class Human implements InterCreature, InterActions, InterSenses, InterUti
         return this.name;
     }
 
-    public String getActualPlace() {
-        return actualPlace.getName();
+    public Place getActualPlace() {
+        return actualPlace;
     }
 
     @Override
@@ -153,13 +152,14 @@ public class Human implements InterCreature, InterActions, InterSenses, InterUti
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null)
-            return false;
         if (!(obj instanceof Human))
             return false;
         if (obj == this)
             return true;
-        return this.hashCode() == obj.hashCode();
+        Human objHuman = (Human) obj;
+        return this.getTimeLastFood() == objHuman.getTimeLastFood() &&
+                this.getActualPlace().getName().equals(objHuman.getActualPlace().getName()) &&
+                this.getName().equals(objHuman.getName());
     }
 
     @Override

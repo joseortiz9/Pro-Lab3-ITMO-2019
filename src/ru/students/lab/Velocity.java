@@ -25,13 +25,12 @@ public class Velocity {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null)
-            return false;
-        if (!(obj instanceof Trajectory))
+        if (!(obj instanceof Velocity))
             return false;
         if (obj == this)
             return true;
-        return this.hashCode() == obj.hashCode();
+        Velocity objVelocity = (Velocity) obj;
+        return this.getValue() == objVelocity.getValue();
     }
 
     @Override

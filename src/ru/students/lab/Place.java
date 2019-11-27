@@ -19,17 +19,17 @@ public class Place extends AbsPlace {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null)
-            return false;
         if (!(obj instanceof Place))
             return false;
         if (obj == this)
             return true;
-        return this.hashCode() == obj.hashCode();
+        Place objPlace = (Place) obj;
+        return this.getThings().size() == objPlace.getThings().size() &&
+                this.getName().equals(objPlace.getName());
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return this.getName();
     }
 }

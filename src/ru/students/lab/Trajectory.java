@@ -33,17 +33,21 @@ public class Trajectory {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null)
-            return false;
         if (!(obj instanceof Trajectory))
             return false;
         if (obj == this)
             return true;
-        return this.hashCode() == obj.hashCode();
+        Trajectory objTrajectory = (Trajectory) obj;
+        return this.calcDistance() == objTrajectory.calcDistance() &&
+                this.getOrigin().toString().equals(objTrajectory.getOrigin().toString()) &&
+                this.getDestiny().toString().equals(objTrajectory.getDestiny().toString());
     }
 
     @Override
     public String toString() {
-        return "Total Trajectory to Destiny: " + this.calcDistance() + "Km";
+        return "Total trajectory's distance: " +
+                this.calcDistance() + "Km " +
+                "[Origin: " + this.getOrigin().toString() +
+                " Destiny: " + this.getDestiny().toString() + "]";
     }
 }

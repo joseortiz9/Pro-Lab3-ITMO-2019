@@ -1,8 +1,8 @@
 package ru.students.lab;
 
 public enum Planets {
-    Earth("Земля", 149598000),
-    Moon("Луна", 150000000);
+    EARTH("Земля", 149598000),
+    MOON("Луна", 150000000);
 
     private final String planet;
     private final double distanceFromSun; // xxx thousands of Km
