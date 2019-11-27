@@ -1,4 +1,6 @@
-package ru.students.lab;
+package ru.students.lab.vehicles;
+
+import ru.students.lab.locationTools.Place;
 
 import java.util.ArrayList;
 

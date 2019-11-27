@@ -1,6 +1,17 @@
 package ru.students.lab;
 
-import java.util.Date;
+import ru.students.lab.living.Human;
+import ru.students.lab.living.TypesFeelings;
+import ru.students.lab.locationTools.Coordinate;
+import ru.students.lab.locationTools.Place;
+import ru.students.lab.planets.Planet;
+import ru.students.lab.planets.TypePlanets;
+import ru.students.lab.things.Thing;
+import ru.students.lab.things.TypeThings;
+import ru.students.lab.vehicles.MovingState;
+import ru.students.lab.vehicles.Rocket;
+import ru.students.lab.vehicles.Trajectory;
+import ru.students.lab.vehicles.TypeVehicles;
 
 public class Main {
 
@@ -46,14 +57,17 @@ public class Main {
 			System.out.println(unknown.getName() + " thinks " + rocket.getTypeVehicles().toString() + " has " + MovingState.STAGNATION + " velocity");
 			rocket.printLocation();
 		}
-		unknown.sees(earth);
-		//unknown.feels(TypesFeelings.INTEREST);
+
+
+		//unknown.sees(earth);
+		unknown.feels(TypesFeelings.INTEREST);
+
 		int timeElapsedOfTravel = 7;
 		rocket.addTimElapsed(timeElapsedOfTravel);
 		rocket.printMovement();
 	    if (rocket.getTrajectory().getTimElapsed() > (2*3600)) {
 	    	unknown.timeToEat(timeElapsedOfTravel);
-			//unknown.moves(dinningRoom, new Coordinate(0,0));
+			unknown.moves(dinningRoom, new Coordinate(0,0));
 			dunno.wakesUp();
 			unknown.sees(dunno);
 			dunno.eats(anyFood);

@@ -1,4 +1,4 @@
-package ru.students.lab;
+package ru.students.lab.living;
 
 public interface InterCreature {
     public void setTimeLastFood(int timeLastFood);

@@ -1,4 +1,4 @@
-package ru.students.lab;
+package ru.students.lab.locationTools;
 
 public class Coordinate {
     private double x;

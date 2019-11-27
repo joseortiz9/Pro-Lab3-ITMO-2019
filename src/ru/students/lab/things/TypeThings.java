@@ -1,4 +1,4 @@
-package ru.students.lab;
+package ru.students.lab.things;
 
 public enum TypeThings {
     FOOD("Еда"),

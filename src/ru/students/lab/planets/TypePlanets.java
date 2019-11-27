@@ -1,4 +1,4 @@
-package ru.students.lab;
+package ru.students.lab.planets;
 
 public enum TypePlanets {
     EARTH("Земля"),

@@ -1,4 +1,7 @@
-package ru.students.lab;
+package ru.students.lab.vehicles;
+
+import ru.students.lab.planets.Planet;
+import ru.students.lab.locationTools.Coordinate;
 
 public class Trajectory {
 

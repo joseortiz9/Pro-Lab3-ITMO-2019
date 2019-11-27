@@ -1,4 +1,7 @@
-package ru.students.lab;
+package ru.students.lab.things;
+
+import ru.students.lab.locationTools.Coordinate;
+import ru.students.lab.locationTools.InterLocationUtilities;
 
 public class Thing implements InterThing, InterLocationUtilities {
     private String name;

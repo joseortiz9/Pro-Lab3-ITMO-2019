@@ -1,4 +1,7 @@
-package ru.students.lab;
+package ru.students.lab.planets;
+
+import ru.students.lab.locationTools.Coordinate;
+import ru.students.lab.locationTools.InterLocationUtilities;
 
 public class Planet implements InterLocationUtilities {
     private TypePlanets type;

@@ -1,4 +1,4 @@
-package ru.students.lab;
+package ru.students.lab.vehicles;
 
 public enum TypeVehicles {
     ROCKET("Ракета"),

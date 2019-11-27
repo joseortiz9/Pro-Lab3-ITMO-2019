@@ -1,4 +1,4 @@
-package ru.students.lab;
+package ru.students.lab.living;
 
 import java.util.ArrayList;
 

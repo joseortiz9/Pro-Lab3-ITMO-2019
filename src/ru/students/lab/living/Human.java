@@ -1,4 +1,12 @@
-package ru.students.lab;
+package ru.students.lab.living;
+
+import ru.students.lab.locationTools.Coordinate;
+import ru.students.lab.locationTools.InterLocationUtilities;
+import ru.students.lab.locationTools.Place;
+import ru.students.lab.locationTools.VisionManager;
+import ru.students.lab.planets.Planet;
+import ru.students.lab.things.Thing;
+import ru.students.lab.things.TypeThings;
 
 public class Human implements InterCreature, InterActions, InterLocationUtilities {
 
@@ -73,7 +81,7 @@ public class Human implements InterCreature, InterActions, InterLocationUtilitie
             this.visionManager = new VisionManager(this.getLocation(), objToSee.getLocation());
 
             for (Thing thing : this.getActualPlace().getThings()) {
-                if (this.visionManager.elementInsideDomain(thing.getLocation())) {
+                if (this.visionManager.visionHasObjInterrupting(thing.getLocation())) {
                     return thing;
                 }
             }

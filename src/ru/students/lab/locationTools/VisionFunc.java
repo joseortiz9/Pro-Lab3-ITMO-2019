@@ -1,4 +1,4 @@
-package ru.students.lab;
+package ru.students.lab.locationTools;
 
 /**
  *  y=mx + b
@@ -29,10 +29,14 @@ public class VisionFunc {
     public double calculateSlope() {
         if (calcDeltaX() == 0)
             return this.getC1().getX();
+        else if (calDeltaY() == 0)
+            return this.getC1().getY();
         return calDeltaY() / calcDeltaX();
     }
 
-    public double calculateB(){
+    public double calculateB() {
+        if (calcDeltaX() == 0 || calDeltaY() == 0)
+            return 0;
         return this.getC1().getY() - (this.getSlope() * this.getC1().getX());
     }
 
@@ -72,12 +76,12 @@ public class VisionFunc {
         if (obj == this)
             return true;
         VisionFunc objVision = (VisionFunc) obj;
-        return Math.abs(this.getSlope()) == Math.abs(objVision.getSlope())  &&
+        return this.getSlope() == objVision.getSlope()  &&
                 this.getB() == objVision.getB();
     }
 
     @Override
     public String toString() {
-        return "[f(x) = " + this.getSlope() + "x +" + this.getB() + "]";
+        return "[f(x) = " + this.getSlope() + "x " + this.getB() + "]";
     }
 }

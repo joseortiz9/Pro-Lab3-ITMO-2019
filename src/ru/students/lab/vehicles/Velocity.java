@@ -1,4 +1,4 @@
-package ru.students.lab;
+package ru.students.lab.vehicles;
 
 public class Velocity {
     private int velocity;
