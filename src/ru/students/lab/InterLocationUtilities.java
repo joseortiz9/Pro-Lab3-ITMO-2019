@@ -1,5 +1,6 @@
 package ru.students.lab;
 
 public interface InterLocationUtilities {
-    public void printLocation();
+    public Coordinate getLocation();
+    public String toString();
 }

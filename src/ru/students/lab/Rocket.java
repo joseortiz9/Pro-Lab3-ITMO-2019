@@ -2,7 +2,7 @@ package ru.students.lab;
 
 import java.util.ArrayList;
 
-public class Rocket extends AbsVehicle implements InterLocationUtilities {
+public class Rocket extends AbsVehicle {
 
     private ArrayList<Place> rooms;
     private Trajectory trajectory;
@@ -18,7 +18,7 @@ public class Rocket extends AbsVehicle implements InterLocationUtilities {
     public Rocket(TypeVehicles typeVehicles, int velocity, Trajectory trajectory) {
         super(typeVehicles, velocity);
         this.rooms = new ArrayList<>();
-        this.trajectory = null;
+        this.trajectory = trajectory;
         this.movingState = this.calcStateVelocity();
     }
 
@@ -44,15 +44,20 @@ public class Rocket extends AbsVehicle implements InterLocationUtilities {
         return (isVelocityBig()) ? MovingState.FAST : MovingState.SLOW ;
     }
 
+    public void addTimElapsed(double hours) {
+        this.getTrajectory().getNearDestiny(hours, this.getVelocity());
+        System.out.println("Passed " + hours + " hours inside " + this.getTypeVehicles().toString());
+    }
+
     public boolean overMiddleOfPath() {
-        return this.getDistanceTraveled() > this.getTrajectory().calcDistance() / 2;
+        return this.getTrajectory().getDistanceTraveled() > this.getTrajectory().calcDistance() / 2;
     }
 
     public void starts() {
         System.out.println(this.toString() + " rushes with a velocity of " + this.getVelocity().toString());
     }
 
-    @Override
+
     public void printLocation() {
         if (overMiddleOfPath())
             System.out.println(this.toString() + " is getting near to Destiny!");
@@ -61,7 +66,7 @@ public class Rocket extends AbsVehicle implements InterLocationUtilities {
     }
 
     public void printMovement() {
-        System.out.println(this.toString() + " went forward " + getDistanceTraveled() + "Km");
+        System.out.println(this.toString() + " went forward " + this.getTrajectory().getDistanceTraveled() + "Km");
     }
 
     public void printTrajectory() {
@@ -80,7 +85,7 @@ public class Rocket extends AbsVehicle implements InterLocationUtilities {
     public int hashCode() {
         return this.getTypeVehicles().toString().hashCode() +
                 this.getVelocity().getValue() +
-                this.getDistanceTraveled();
+                this.getTrajectory().getDistanceTraveled();
     }
 
     @Override
@@ -91,7 +96,7 @@ public class Rocket extends AbsVehicle implements InterLocationUtilities {
             return true;
         Rocket objRocket = (Rocket) obj;
         return this.getVelocity().getValue() == objRocket.getVelocity().getValue() &&
-                this.getDistanceTraveled() == objRocket.getDistanceTraveled() &&
+                this.getTrajectory().getDistanceTraveled() == objRocket.getTrajectory().getDistanceTraveled() &&
                 this.getTypeVehicles().toString().equals(objRocket.getTypeVehicles().toString());
     }
 

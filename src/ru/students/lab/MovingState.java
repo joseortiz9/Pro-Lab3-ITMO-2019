@@ -3,7 +3,7 @@ package ru.students.lab;
 public enum MovingState {
     FAST("Fast"),
     SLOW("Slow"),
-    STAGNATION("without");
+    STAGNATION("No");
 
     private final String name;
     MovingState(String name) {

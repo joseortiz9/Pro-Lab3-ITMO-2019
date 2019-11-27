@@ -2,7 +2,9 @@ package ru.students.lab;
 
 public enum TypeThings {
     FOOD("Еда"),
-    COMPUTER("Компьютер");
+    WINDOW("Окно"),
+    COMPUTER("Компьютер"),
+    PANEL("Пульт управления");
 
     private final String name;
     TypeThings(String name) {

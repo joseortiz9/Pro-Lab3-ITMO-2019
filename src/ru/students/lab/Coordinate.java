@@ -1,20 +1,36 @@
 package ru.students.lab;
 
 public class Coordinate {
-    private int x;
-    private int y;
+    private double x;
+    private double y;
 
-    public Coordinate(int x, int y) {
+    public Coordinate(double x, double y) {
         this.x = x;
         this.y = y;
     }
 
-    public int getX() {
+    public double getX() {
         return x;
     }
 
-    public int getY() {
+    public double getY() {
         return y;
+    }
+
+    public void addX(double x) {
+        this.x += x;
+    }
+
+    public void addY(double y) {
+        this.y += y;
+    }
+
+    public void dropX(double x) {
+        this.x -= x;
+    }
+
+    public void dropY(double y) {
+        this.y -= y;
     }
 
     @Override
@@ -35,6 +51,6 @@ public class Coordinate {
 
     @Override
     public String toString() {
-        return "[x=" + this.getX() + ", y=" + this.getY() + "]";
+        return " [x=" + this.getX() + ", y=" + this.getY() + "]";
     }
 }

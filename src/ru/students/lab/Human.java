@@ -1,30 +1,33 @@
 package ru.students.lab;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-public class Human implements InterCreature, InterActions, InterSenses, InterLocationUtilities {
+public class Human implements InterCreature, InterActions, InterLocationUtilities {
 
     private String name;
     private int timeLastFood;
-    private ArrayList<Feeling> feelings;
+    private TypesFeelings mood;
     private Place actualPlace;
+    private Coordinate location;
     private boolean awake;
+    private VisionManager visionManager;
 
-    public Human(String name, Place place, int timeLastFood) {
+    public Human(String name, Place place, int timeLastFood, Coordinate location) {
         this.name = name;
         this.actualPlace = place;
         this.timeLastFood = timeLastFood;
-        this.feelings =  this.fillFeelings();
+        this.mood =  null;
         this.awake = true;
+        this.location = location;
+        this.visionManager = null;
     }
 
-    public Human(String name, Place place, int timeLastFood, boolean awake) {
+    public Human(String name, Place place, int timeLastFood, boolean awake, Coordinate location) {
         this.name = name;
         this.actualPlace = place;
         this.timeLastFood = timeLastFood;
-        this.feelings =  this.fillFeelings();
+        this.mood =  null;
         this.awake = awake;
+        this.location = location;
+        this.visionManager = null;
     }
 
     @Override
@@ -40,67 +43,61 @@ public class Human implements InterCreature, InterActions, InterSenses, InterLoc
     //The rocket is the time zero, so timeLastFood depends on how much hours before
     //or after the rocket's rush the person ate. For a better explanation see image in docs
     @Override
-    public boolean isTimeToEat(int timeElapsed) {
-        return timeElapsed - this.getTimeLastFood()  >= 5;
+    public void timeToEat(int timeElapsed) {
+        if (timeElapsed - this.getTimeLastFood()  >= 5)
+            this.feels(TypesFeelings.HUNGER);
+        else
+            System.out.println("Still is not time to eat!");
     }
 
-
-    @Override
-    public void changeFeeling(TypesFeelings feeling) {
-        if (this.getFeelings().contains()) {
-            feeling.changeIsFelt();
-            int indFeeling = this.getFeelings().indexOf(feeling);
-            this.getFeelings().set(indFeeling, feeling);
-        }
+    public boolean actualPlaceHasThing(Thing thing) {
+        return this.getActualPlace().getThings().contains(thing);
     }
-
-    public ArrayList<Feeling> getFeelings() {
-        return this.feelings;
-    }
-
 
     @Override
     public void eats(Thing thing) {
-        if (thing.isType(TypeThings.Food) && thing.existing()) {
-            System.out.println(getName() + " eats " + thing.toString());
-            thing.decreaseAmount();
-            this.feels(TypesFeelings.Satisfied);
-            this.changeFeeling(TypesFeelings.Hunger);
-        }
-        else
-            System.out.println("There is no more "+ thing.getName());
+        if (actualPlaceHasThing(thing)) {
+            if (thing.isType(TypeThings.FOOD) && thing.existing()) {
+                thing.decreaseAmount();
+                System.out.println(getName() + " eats " + thing.toString());
+                this.feels(TypesFeelings.SATISFACTION);
+            } else
+                System.out.println("There is no more " + thing.getName());
+        } else
+            System.out.println(thing.getName() + " is not in this room!");
     }
 
+    public InterLocationUtilities getObjInterrupting(InterLocationUtilities objToSee) {
+        try {
+            this.visionManager = new VisionManager(this.getLocation(), objToSee.getLocation());
 
-    @Override
-    public void sees(Object objToSee, Object objInterrupt) {
-        if (!this.isAwake())
-            System.out.println(this.getName() + " can not see " +
-                    objToSee.toString() + " because is sleeping" /*+ this.getStatus()*/);
-        else {
-            if (objInterrupt != null)
-                System.out.println(this.getName() + " can not see " +
-                        objToSee.toString() + " because has " +
-                        objInterrupt.toString() + " in the middle");
-            else {
-                if (objToSee.equals(Planets.Moon)) {
-                    System.out.println(this.getName() + " saw the " + objToSee.toString());
-                    this.feels(TypesFeelings.Interest);
+            for (Thing thing : this.getActualPlace().getThings()) {
+                if (this.visionManager.elementInsideDomain(thing.getLocation())) {
+                    return thing;
                 }
-                else if (objToSee instanceof Velocity) {
-                    System.out.println(this.getName() + " can not see the Velocity of " + objToSee.toString());
-                    this.feels(TypesFeelings.Stagnation);
-                }
-                else
-                    System.out.println(this.getName() + " sees the " + objToSee.toString());
             }
+        } catch (ClassCastException e) {
+            System.out.println(objToSee.toString() + " has no coordinates");
         }
+        return null;
     }
 
+    public void sees(InterLocationUtilities objToSee) {
+        InterLocationUtilities objInterrupting = getObjInterrupting(objToSee);
+        if (objInterrupting == null)
+            System.out.println(this.getName() + " sees " + objToSee.toString());
+        else if (objInterrupting.getClass() == Thing.class &&
+                ((Thing) objInterrupting).isCanSeeThrough()) {
+                System.out.println(this.getName() + " sees " + objToSee.toString() +
+                        " through " + objInterrupting.toString());
+        } else
+            System.out.println(this.getName() + " can not see " + objToSee.toString() +
+                    " because " + objInterrupting.toString() + " is in the middle");
+    }
 
     @Override
     public void feels(TypesFeelings feeling) {
-        this.changeFeeling(feeling);
+        this.setMood(feeling);
         System.out.println(this.getName() + feeling.getTextFeeling());
     }
 
@@ -108,7 +105,7 @@ public class Human implements InterCreature, InterActions, InterSenses, InterLoc
     @Override
     public void wakesUp() {
         if (!this.isAwake()) {
-            this.awake = true;
+            this.setAwake(true);
             System.out.println(getName() + " wakes up");
         }
     }
@@ -122,15 +119,35 @@ public class Human implements InterCreature, InterActions, InterSenses, InterLoc
             System.out.println(getName() + " is awake");
     }
 
-    @Override
     public void printLocation() {
         System.out.println(getName() + " is in " + getActualPlace().getName());
     }
 
     @Override
-    public void moves(Place nextPlace) {
-        this.actualPlace = nextPlace;
+    public void moves(Place nextPlace, Coordinate newCoord) {
+        this.setActualPlace(nextPlace);
+        this.setLocation(newCoord);
         System.out.println(getName() + " moves to " + nextPlace.getName());
+    }
+
+    public void setActualPlace(Place actualPlace) {
+        this.actualPlace = actualPlace;
+    }
+
+    public void setLocation(Coordinate location) {
+        this.location = location;
+    }
+
+    public void setMood(TypesFeelings mood) {
+        this.mood = mood;
+    }
+
+    public void setAwake(boolean awake) {
+        this.awake = awake;
+    }
+
+    public TypesFeelings getMood() {
+        return mood;
     }
 
     public boolean isAwake() {
@@ -146,8 +163,13 @@ public class Human implements InterCreature, InterActions, InterSenses, InterLoc
     }
 
     @Override
+    public Coordinate getLocation() {
+        return this.location;
+    }
+
+    @Override
     public int hashCode() {
-        return this.getName().hashCode() + this.getActualPlace().hashCode();
+        return this.getName().hashCode() + this.getLocation().hashCode();
     }
 
     @Override
@@ -157,13 +179,13 @@ public class Human implements InterCreature, InterActions, InterSenses, InterLoc
         if (obj == this)
             return true;
         Human objHuman = (Human) obj;
-        return this.getTimeLastFood() == objHuman.getTimeLastFood() &&
-                this.getActualPlace().getName().equals(objHuman.getActualPlace().getName()) &&
+        return this.getLocation().equals(objHuman.getLocation())  &&
+                this.getActualPlace().equals(objHuman.getActualPlace()) &&
                 this.getName().equals(objHuman.getName());
     }
 
     @Override
     public String toString() {
-        return getName();
+        return this.getName() + this.getLocation().toString();
     }
 }
