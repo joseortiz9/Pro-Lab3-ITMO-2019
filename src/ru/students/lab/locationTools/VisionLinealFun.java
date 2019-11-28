@@ -5,13 +5,13 @@ package ru.students.lab.locationTools;
  *  m: slope
  */
 
-public class VisionFunc {
+public class VisionLinealFun {
     private Coordinate c1;
     private Coordinate c2;
     private double slope;
     private double b;
 
-    public VisionFunc(Coordinate c1, Coordinate c2) {
+    public VisionLinealFun(Coordinate c1, Coordinate c2) {
         this.c1 = c1;
         this.c2 = c2;
         this.slope = this.calculateSlope();
@@ -44,10 +44,6 @@ public class VisionFunc {
         return (this.getSlope() * this.getC1().getX()) + this.getB();
     }
 
-    public boolean positiveFunc() {
-        return this.getSlope() >= -0;
-    }
-
     public Coordinate getC1() {
         return c1;
     }
@@ -71,11 +67,11 @@ public class VisionFunc {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof VisionFunc))
+        if (!(obj instanceof VisionLinealFun))
             return false;
         if (obj == this)
             return true;
-        VisionFunc objVision = (VisionFunc) obj;
+        VisionLinealFun objVision = (VisionLinealFun) obj;
         return this.getSlope() == objVision.getSlope()  &&
                 this.getB() == objVision.getB();
     }

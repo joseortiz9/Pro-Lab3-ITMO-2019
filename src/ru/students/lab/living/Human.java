@@ -1,5 +1,6 @@
 package ru.students.lab.living;
 
+import ru.students.lab.exceptions.ProblemSeeingObjException;
 import ru.students.lab.locationTools.Coordinate;
 import ru.students.lab.locationTools.InterLocationUtilities;
 import ru.students.lab.locationTools.Place;
@@ -76,51 +77,21 @@ public class Human implements InterCreature, InterActions, InterLocationUtilitie
     }
 
 
-    public InterLocationUtilities getObjInterrupting(InterLocationUtilities objToSee) {
+    @Override
+    public void sees(InterLocationUtilities objToSee) {
         try {
-            this.visionManager = new VisionManager(this.getLocation(), objToSee.getLocation());
+            this.visionManager = new VisionManager(this, objToSee);
 
-            for (Thing thing : this.getActualPlace().getThings()) {
-                if (this.visionManager.visionHasObjInterrupting(thing.getLocation())) {
-                    return thing;
-                }
-            }
+            if (this.visionManager.canSeeObj(objToSee))
+                System.out.println(this.visionManager.getStrSeeingProcess());
+
         } catch (ClassCastException e) {
             System.out.println(objToSee.toString() + " has no coordinates");
+        } catch (ProblemSeeingObjException e) {
+            System.out.println(this.getName() + "can not see " + objToSee.toString() +
+                    " because " + e.getMessage());
         }
-        return null;
     }
-
-
-    public void sees(InterLocationUtilities objToSee) {
-        if (this.canSeeObj(objToSee)) {
-            InterLocationUtilities objInterrupting = getObjInterrupting(objToSee);
-            if (objInterrupting == null)
-                if (objToSee.getClass() == Planet.class)
-                    System.out.println(this.getName() + " only can see " + objToSee.toString() + " through " + TypeThings.WINDOW);
-                else
-                    System.out.println(this.getName() + " sees " + objToSee.toString());
-            else if (objInterrupting.getClass() == Thing.class &&
-                    ((Thing) objInterrupting).isCanSeeThrough()) {
-                    System.out.println(this.getName() + " sees " + objToSee.toString() +
-                            " through " + objInterrupting.toString());
-            } else
-                System.out.println(this.getName() + " can not see " + objToSee.toString() +
-                        " because " + objInterrupting.toString() + " is in the middle");
-        } else
-            System.out.println();
-    }
-
-
-    public boolean canSeeObj(InterLocationUtilities objToSee) {
-        if (objToSee.getClass() == Human.class)
-            return this.getActualPlace().equals(((Human) objToSee).getActualPlace());
-        else if (objToSee.getClass() == Thing.class)
-            return this.getActualPlace().getThings().contains(((Thing) objToSee));
-        else
-            return true;
-    }
-
 
     @Override
     public void feels(TypesFeelings feeling) {

@@ -58,8 +58,7 @@ public class Main {
 			rocket.printLocation();
 		}
 
-
-		//unknown.sees(earth);
+		unknown.sees(moon);
 		unknown.feels(TypesFeelings.INTEREST);
 
 		int timeElapsedOfTravel = 7;

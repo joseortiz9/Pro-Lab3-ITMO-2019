@@ -31,6 +31,7 @@ public class Trajectory {
     public void getNearDestiny(double hours, Velocity velocity) {
         this.timElapsed += hours * 3600;
         this.distanceTraveled += this.getTimElapsed() * velocity.getValue();
+        this.getOrigin().getLocation().addX(getDistanceTraveled());
         this.getDestiny().getLocation().dropX(getDistanceTraveled());
     }
 

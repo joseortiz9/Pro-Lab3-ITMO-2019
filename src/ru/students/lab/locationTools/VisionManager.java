@@ -1,27 +1,82 @@
 package ru.students.lab.locationTools;
 
-public class VisionManager {
-    private Coordinate humanCoords;
-    private Coordinate objCoords;
-    private VisionFunc mainFunc;
-    private VisionFunc tempObjsFunc;
+import ru.students.lab.exceptions.ProblemSeeingObjException;
+import ru.students.lab.living.Human;
+import ru.students.lab.planets.Planet;
+import ru.students.lab.things.Thing;
+import ru.students.lab.things.TypeThings;
 
-    public VisionManager(Coordinate humanCoords, Coordinate objCoords) {
-        this.humanCoords = humanCoords;
-        this.objCoords = objCoords;
-        this.mainFunc = new VisionFunc(humanCoords, objCoords);
+public class VisionManager {
+    private Human human;
+    private InterLocationUtilities objToSee;
+    private VisionLinealFun mainFunc;
+    private VisionLinealFun tempObjsFunc;
+    private InterLocationUtilities objInterrupting;
+
+    public VisionManager(Human human, InterLocationUtilities objToSee) {
+        this.human = human;
+        this.objToSee = objToSee;
+        this.mainFunc = new VisionLinealFun(this.getHumanCoords(), this.getObjCoords());
         this.tempObjsFunc = null;
+        this.objInterrupting = this.calcObjInterrupting();
     }
 
-    public boolean visionHasObjInterrupting(Coordinate objInterruptCoords) {
-        this.tempObjsFunc = new VisionFunc(objInterruptCoords, this.getObjCoords());
+    public boolean actualPlaceHasThing(Thing thing) {
+        return this.getHuman().getActualPlace().getThings().contains(thing);
+    }
+
+    public String getStrSeeingProcess() {
+        if (this.getObjInterrupting() == null) {
+            if (this.getObjToSee().getClass() == Planet.class)
+                return this.getHuman().getName() + " only can see " + this.getObjToSee().toString() + " through " + TypeThings.WINDOW;
+            else
+                return this.getHuman().getName() + " sees " + this.getObjToSee().toString();
+        }
+        else if (this.getObjInterrupting().getClass() == Thing.class &&
+                ((Thing) this.getObjInterrupting()).isCanSeeThrough()) {
+            return this.getHuman().getName() + " sees " + this.getObjToSee().toString() +
+                    " through " + this.getObjInterrupting().toString();
+        } else
+            return this.getHuman().getName() + " can not see " + this.getObjToSee().toString() +
+                    " because " + this.getObjInterrupting().toString() + " is in the middle";
+    }
+
+
+    public boolean canSeeObj(InterLocationUtilities objToSee) throws ProblemSeeingObjException {
+        if (objToSee.getClass() == Human.class)
+            if (this.getHuman().getActualPlace().equals(((Human) objToSee).getActualPlace()))
+                return true;
+            else
+                throw new ProblemSeeingObjException("are not in same place(room)");
+        else if (objToSee.getClass() == Thing.class)
+            if (this.actualPlaceHasThing((Thing) objToSee))
+                return true;
+            else
+                throw new ProblemSeeingObjException("object is in different place");
+        else
+            return true;
+    }
+
+
+    private InterLocationUtilities calcObjInterrupting() {
+        for (Thing thing : this.getHuman().getActualPlace().getThings())
+            if (this.visionHasObjInterrupting(thing.getLocation()))
+                return thing;
+
+        return null;
+    }
+
+
+    private boolean visionHasObjInterrupting(Coordinate objInterruptCoords) {
+        this.tempObjsFunc = new VisionLinealFun(objInterruptCoords, this.getObjCoords());
 
         if (insideRangeVision(objInterruptCoords))
             return this.getMainFunc().equals(tempObjsFunc);
         return false;
     }
 
-    public boolean insideRangeVision(Coordinate objInterCoords) {
+
+    private boolean insideRangeVision(Coordinate objInterCoords) {
         int x1 = (int) this.getHumanCoords().getX();
         int y1 = (int) this.getHumanCoords().getY();
         int x2 = (int) this.getObjCoords().getX();
@@ -45,15 +100,27 @@ public class VisionManager {
     }
 
 
+    public Human getHuman() {
+        return this.human;
+    }
+
+    public InterLocationUtilities getObjToSee() {
+        return this.objToSee;
+    }
+
+    public InterLocationUtilities getObjInterrupting() {
+        return this.objInterrupting;
+    }
+
     public Coordinate getHumanCoords() {
-        return this.humanCoords;
+        return this.getHuman().getLocation();
     }
 
     public Coordinate getObjCoords() {
-        return this.objCoords;
+        return this.getObjToSee().getLocation();
     }
 
-    public VisionFunc getMainFunc() {
-        return mainFunc;
+    public VisionLinealFun getMainFunc() {
+        return this.mainFunc;
     }
 }

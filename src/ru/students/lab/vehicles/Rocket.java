@@ -59,7 +59,6 @@ public class Rocket extends AbsVehicle {
         System.out.println(this.toString() + " rushes with a velocity of " + this.getVelocity().toString());
     }
 
-
     public void printLocation() {
         if (overMiddleOfPath())
             System.out.println(this.toString() + " is getting near to Destiny!");
