@@ -167,7 +167,10 @@ public class Human implements InterCreature, InterActions, InterLocationUtilitie
 
     @Override
     public int hashCode() {
-        return this.getName().hashCode() + this.getLocation().hashCode();
+        int result = 7;
+        result += (this.getName().hashCode()/50) >> 2;
+        result += this.getLocation().hashCode();
+        return result;
     }
 
     @Override

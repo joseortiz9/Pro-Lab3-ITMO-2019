@@ -16,7 +16,10 @@ public class Place extends AbsPlace {
 
     @Override
     public int hashCode() {
-        return this.getName().hashCode() + this.getThings().size();
+        int result = 21;
+        result += (this.getName().hashCode()/50) >> 2;
+        result += this.getThings().size();
+        return result;
     }
 
     @Override

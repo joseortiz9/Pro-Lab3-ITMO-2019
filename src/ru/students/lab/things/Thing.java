@@ -55,7 +55,11 @@ public class Thing implements InterThing, InterLocationUtilities {
 
     @Override
     public int hashCode() {
-        return this.getName().hashCode() + this.getLocation().hashCode();
+        int result = 14;
+        result += (this.getName().hashCode()/50) >> 2;
+        result += this.getLocation().hashCode();
+        result += this.getAmount();
+        return result;
     }
 
     @Override

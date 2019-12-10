@@ -4,14 +4,12 @@ import ru.students.lab.living.Human;
 import ru.students.lab.living.TypesFeelings;
 import ru.students.lab.locationTools.Coordinate;
 import ru.students.lab.locationTools.Place;
+import ru.students.lab.locationTools.VisionLinealFun;
 import ru.students.lab.planets.Planet;
 import ru.students.lab.planets.TypePlanets;
 import ru.students.lab.things.Thing;
 import ru.students.lab.things.TypeThings;
-import ru.students.lab.vehicles.MovingState;
-import ru.students.lab.vehicles.Rocket;
-import ru.students.lab.vehicles.Trajectory;
-import ru.students.lab.vehicles.TypeVehicles;
+import ru.students.lab.vehicles.*;
 
 public class Main {
 

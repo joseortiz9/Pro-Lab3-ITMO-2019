@@ -35,7 +35,11 @@ public class Coordinate {
 
     @Override
     public int hashCode() {
-        return this.toString().hashCode();
+        int result = 34;
+        result += ((int)this.getX()) << 2;
+        result <<= 3;
+        result += this.getY();
+        return result;
     }
 
     @Override

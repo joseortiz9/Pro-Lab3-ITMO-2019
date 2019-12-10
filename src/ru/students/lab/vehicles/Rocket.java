@@ -84,9 +84,12 @@ public class Rocket extends AbsVehicle {
 
     @Override
     public int hashCode() {
-        return this.getTypeVehicles().toString().hashCode() +
-                this.getVelocity().getValue() +
-                this.getTrajectory().getDistanceTraveled();
+        int result = 35;
+        result += (this.getTypeVehicles().hashCode()/50) >> 2;
+        result += this.getTrajectory().hashCode();
+        result >>= 5;
+        result += this.getVelocity().hashCode();
+        return result;
     }
 
     @Override

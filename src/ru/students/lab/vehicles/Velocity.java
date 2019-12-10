@@ -20,7 +20,10 @@ public class Velocity {
 
     @Override
     public int hashCode() {
-        return this.getValue();
+        int result = 56;
+        result <<= 2;
+        result += this.getValue();
+        return result;
     }
 
     @Override

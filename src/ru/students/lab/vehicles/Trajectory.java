@@ -53,7 +53,11 @@ public class Trajectory {
 
     @Override
     public int hashCode() {
-        return this.getOrigin().hashCode() + this.getDestiny().hashCode();
+        int result = 42;
+        result += this.getOrigin().hashCode() - this.getDestiny().hashCode();
+        result >>= 4;
+        result += this.getDistanceTraveled();
+        return result;
     }
 
     @Override

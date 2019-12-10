@@ -23,7 +23,10 @@ public class Planet implements InterLocationUtilities {
 
     @Override
     public int hashCode() {
-        return this.getType().toString().hashCode() + this.getLocation().hashCode();
+        int result = 28;
+        result += (this.getType().hashCode()/50) >> 2;
+        result += this.getLocation().hashCode();
+        return result;
     }
 
     @Override

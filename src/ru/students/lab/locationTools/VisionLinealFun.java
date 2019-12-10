@@ -62,7 +62,12 @@ public class VisionLinealFun {
 
     @Override
     public int hashCode() {
-        return this.toString().hashCode();
+        int result = 59;
+        result += this.getC1().hashCode();
+        result >>= 1;
+        result += this.getC2().hashCode();
+        result += (int) this.getSlope();
+        return result;
     }
 
     @Override

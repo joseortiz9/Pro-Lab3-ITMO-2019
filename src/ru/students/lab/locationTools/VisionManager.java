@@ -31,8 +31,7 @@ public class VisionManager {
                 return this.getHuman().getName() + " only can see " + this.getObjToSee().toString() + " through " + TypeThings.WINDOW;
             else
                 return this.getHuman().getName() + " sees " + this.getObjToSee().toString();
-        }
-        else if (this.getObjInterrupting().getClass() == Thing.class &&
+        } else if (this.getObjInterrupting().getClass() == Thing.class &&
                 ((Thing) this.getObjInterrupting()).isCanSeeThrough()) {
             return this.getHuman().getName() + " sees " + this.getObjToSee().toString() +
                     " through " + this.getObjInterrupting().toString();
@@ -85,18 +84,18 @@ public class VisionManager {
         if (x2 - x1 == 0) {
             return ((objInterCoords.getY() > y1 && objInterCoords.getY() < y2)) ||
                     (objInterCoords.getY() > y2 && objInterCoords.getY() < y1);
-        }else if (y2 - y1 == 0)
+        } else if (y2 - y1 == 0)
             return ((objInterCoords.getX() > x1 && objInterCoords.getX() < x2)) ||
                     (objInterCoords.getX() > x2 && objInterCoords.getX() < x1);
         else
             return ((objInterCoords.getX() > x1 && objInterCoords.getX() < x2) &&
                     (objInterCoords.getY() > y1 && objInterCoords.getY() < y2)) ||
                     ((objInterCoords.getX() > x2 && objInterCoords.getX() < x1) &&
-                    (objInterCoords.getY() > y2 && objInterCoords.getY() < y1)) ||
+                            (objInterCoords.getY() > y2 && objInterCoords.getY() < y1)) ||
                     ((objInterCoords.getX() > x2 && objInterCoords.getX() < x1) &&
-                    (objInterCoords.getY() > y1 && objInterCoords.getY() < y2)) ||
+                            (objInterCoords.getY() > y1 && objInterCoords.getY() < y2)) ||
                     ((objInterCoords.getX() > x1 && objInterCoords.getX() < x2) &&
-                    (objInterCoords.getY() > y2 && objInterCoords.getY() < y1));
+                            (objInterCoords.getY() > y2 && objInterCoords.getY() < y1));
     }
 
 
