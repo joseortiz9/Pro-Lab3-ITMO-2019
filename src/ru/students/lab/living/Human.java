@@ -1,15 +1,20 @@
 package ru.students.lab.living;
 
+import ru.students.lab.exceptions.PerceivingCelBodyException;
 import ru.students.lab.exceptions.ProblemSeeingObjException;
+import ru.students.lab.galaxy.CelestialBody;
 import ru.students.lab.locationTools.Coordinate;
 import ru.students.lab.locationTools.InterLocationUtilities;
 import ru.students.lab.locationTools.Place;
-import ru.students.lab.locationTools.VisionManager;
-import ru.students.lab.planets.Planet;
+import ru.students.lab.sensesTools.CelBodyPerceptionManager;
+import ru.students.lab.sensesTools.VisionManager;
 import ru.students.lab.things.Thing;
 import ru.students.lab.things.TypeThings;
+import ru.students.lab.timeTools.TimeManager;
+import ru.students.lab.vehicles.AbsVehicle;
+import ru.students.lab.vehicles.MovingState;
 
-public class Human implements InterCreature, InterActions, InterLocationUtilities {
+public class Human implements InterCreature, InterBasicActions, InterPerception, InterLocationUtilities {
 
     private String name;
     private int timeLastFood;
@@ -18,56 +23,48 @@ public class Human implements InterCreature, InterActions, InterLocationUtilitie
     private Coordinate location;
     private boolean awake;
     private VisionManager visionManager;
+    private CelBodyPerceptionManager celBodyPerceptionManager;
 
     public Human(String name, Place place, int timeLastFood, Coordinate location) {
         this.name = name;
         this.actualPlace = place;
         this.timeLastFood = timeLastFood;
-        this.mood =  null;
+        this.mood =  TypesFeelings.NEUTRAL;
         this.awake = true;
         this.location = location;
         this.visionManager = null;
+        this.celBodyPerceptionManager = null;
     }
 
     public Human(String name, Place place, int timeLastFood, boolean awake, Coordinate location) {
         this.name = name;
         this.actualPlace = place;
         this.timeLastFood = timeLastFood;
-        this.mood =  null;
+        this.mood =  TypesFeelings.NEUTRAL;
         this.awake = awake;
         this.location = location;
         this.visionManager = null;
+        this.celBodyPerceptionManager = null;
     }
 
+    // The rocket is the time zero, so timeLastFood depends on how much hours before
+    // or after the rocket's rush the person ate. And if the person it will change
+    // to the actual time of travel.
+    // For a better explanation see image in docs
     @Override
-    public void setTimeLastFood(int timeLastFood) {
-        this.timeLastFood = timeLastFood;
-    }
-
-    @Override
-    public int getTimeLastFood() {
-        return this.timeLastFood;
-    }
-
-    //The rocket is the time zero, so timeLastFood depends on how much hours before
-    //or after the rocket's rush the person ate. For a better explanation see image in docs
-    @Override
-    public void timeToEat(int timeElapsed) {
-        if (timeElapsed - this.getTimeLastFood()  >= 5)
+    public void timeToEat() {
+        if (TimeManager.getTimeElapsed() - this.getTimeLastFood()  >= 5)
             this.feels(TypesFeelings.HUNGER);
         else
             System.out.println("Still is not time to eat!");
     }
 
-    public boolean actualPlaceHasThing(Thing thing) {
-        return this.getActualPlace().getThings().contains(thing);
-    }
-
     @Override
     public void eats(Thing thing) {
-        if (actualPlaceHasThing(thing)) {
+        if (this.getActualPlace().hasThing(thing)) {
             if (thing.isType(TypeThings.FOOD) && thing.existing()) {
                 thing.decreaseAmount();
+                this.setTimeLastFood(TimeManager.getTimeElapsed());
                 System.out.println(getName() + " eats " + thing.toString());
                 this.feels(TypesFeelings.SATISFACTION);
             } else
@@ -94,9 +91,62 @@ public class Human implements InterCreature, InterActions, InterLocationUtilitie
     }
 
     @Override
+    public void said(InterCreature creature, String msg) {
+        System.out.println(this.getName() + " said to " + creature.getName() + " \"" + msg + "\"");
+    }
+
+    @Override
     public void feels(TypesFeelings feeling) {
         this.setMood(feeling);
         System.out.println(this.getName() + feeling.getTextFeeling());
+    }
+
+    @Override
+    public void searchExit() {
+        System.out.println(this.getName() + " looking for an exit...");
+        for (Thing thing : this.getActualPlace().getThings()) {
+            if (thing.isCanSeeThrough()) {
+                this.sees(thing);
+                return;
+            }
+        }
+        System.out.println(this.getName() + " can not find exit");
+    }
+
+
+    @Override
+    public void perceiveSize(CelestialBody celBody) {
+        try {
+            this.celBodyPerceptionManager = new CelBodyPerceptionManager(this, celBody);
+            System.out.println(celBodyPerceptionManager.getPerceptionOfSize());
+
+        } catch (PerceivingCelBodyException e) {
+            System.out.println(this.getName() + "can not perceive size of " + celBody.toString() +
+                    " because " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void perceiveDetails(CelestialBody celBody) {
+        try {
+            this.celBodyPerceptionManager = new CelBodyPerceptionManager(this, celBody);
+            this.celBodyPerceptionManager.perceiveDetails();
+
+        } catch (PerceivingCelBodyException e) {
+            System.out.println(this.getName() + "can not perceive details of " + celBody.toString() +
+                    " because " + e.getMessage());
+        }
+    }
+
+
+    @Override
+    public void perceiveMovement(AbsVehicle vehicle) {
+        if (vehicle.getMovingState().equals(MovingState.SLOW) || vehicle.getMovingState().equals(MovingState.STAGNATION)) {
+            //this.feels(TypesFeelings.STAGNATION);
+            if (!vehicle.isVelocityBig())
+                System.out.println("Velocity is not fast enough");
+            System.out.println(this.getName() + " perceives " + vehicle.getTypeVehicles().toString() + " is " + MovingState.STAGNATION);
+        }
     }
 
 
@@ -142,6 +192,16 @@ public class Human implements InterCreature, InterActions, InterLocationUtilitie
 
     public void setAwake(boolean awake) {
         this.awake = awake;
+        System.out.println(this.getName() + ((awake) ? " woke up" : " went to sleep"));
+    }
+
+    public void setTimeLastFood(int timeLastFood) {
+        this.timeLastFood = timeLastFood;
+    }
+
+    @Override
+    public int getTimeLastFood() {
+        return this.timeLastFood;
     }
 
     public TypesFeelings getMood() {

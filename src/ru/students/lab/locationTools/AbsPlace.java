@@ -19,6 +19,10 @@ public abstract class AbsPlace {
         this.things = things;
     }
 
+    public boolean hasThing(Thing thing) {
+        return this.getThings().contains(thing);
+    }
+
     public String getName() {
         return this.name;
     }

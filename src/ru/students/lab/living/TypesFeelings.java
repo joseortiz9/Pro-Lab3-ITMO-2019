@@ -1,13 +1,15 @@
 package ru.students.lab.living;
 
-import java.util.ArrayList;
-
 public enum TypesFeelings {
+    NEUTRAL("Neutral"),
     INTEREST("Interest"),
+    DOUBTFUL("Doubtful"),
     HUNGER("Hunger"),
     STAGNATION("Stagnation"),
     TIREDNESS("Tiredness"),
-    SATISFACTION("Satisfaction");
+    SATISFACTION("Satisfaction"),
+    ATTENTION("Attention"),
+    TRAPPED("Trapped");
 
     private final String name;
     TypesFeelings(String name) {

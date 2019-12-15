@@ -1,4 +1,6 @@
-package ru.students.lab.locationTools;
+package ru.students.lab.sensesTools;
+
+import ru.students.lab.locationTools.Coordinate;
 
 /**
  *  y=mx + b

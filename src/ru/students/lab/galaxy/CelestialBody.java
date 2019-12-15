@@ -1,19 +1,25 @@
-package ru.students.lab.planets;
+package ru.students.lab.galaxy;
 
 import ru.students.lab.locationTools.Coordinate;
 import ru.students.lab.locationTools.InterLocationUtilities;
 
-public class Planet implements InterLocationUtilities {
-    private TypePlanets type;
+public class CelestialBody implements InterLocationUtilities {
+    private String name;
+    private TypeCelestialBodies type;
     private Coordinate location;
 
-    public Planet(TypePlanets type, Coordinate location) {
+    public CelestialBody(String name, TypeCelestialBodies type, Coordinate location) {
+        this.name = name;
         this.type = type;
         this.location = location;
     }
 
-    public TypePlanets getType() {
+    public TypeCelestialBodies getType() {
         return type;
+    }
+
+    public String getName() {
+        return name;
     }
 
     @Override
@@ -31,17 +37,17 @@ public class Planet implements InterLocationUtilities {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof Planet))
+        if (!(obj instanceof CelestialBody))
             return false;
         if (obj == this)
             return true;
-        Planet objPlanet = (Planet) obj;
-        return this.getLocation().equals(objPlanet.getLocation()) &&
-                this.getType().equals(objPlanet.getType());
+        CelestialBody objCelBody = (CelestialBody) obj;
+        return this.getLocation().equals(objCelBody.getLocation()) &&
+                this.getType().equals(objCelBody.getType());
     }
 
     @Override
     public String toString() {
-        return this.getType().toString() + this.getLocation().toString();
+        return this.getName() + this.getLocation().toString();
     }
 }

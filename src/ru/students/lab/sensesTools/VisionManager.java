@@ -1,8 +1,10 @@
-package ru.students.lab.locationTools;
+package ru.students.lab.sensesTools;
 
 import ru.students.lab.exceptions.ProblemSeeingObjException;
+import ru.students.lab.galaxy.CelestialBody;
 import ru.students.lab.living.Human;
-import ru.students.lab.planets.Planet;
+import ru.students.lab.locationTools.Coordinate;
+import ru.students.lab.locationTools.InterLocationUtilities;
 import ru.students.lab.things.Thing;
 import ru.students.lab.things.TypeThings;
 
@@ -21,13 +23,9 @@ public class VisionManager {
         this.objInterrupting = this.calcObjInterrupting();
     }
 
-    public boolean actualPlaceHasThing(Thing thing) {
-        return this.getHuman().getActualPlace().getThings().contains(thing);
-    }
-
     public String getStrSeeingProcess() {
         if (this.getObjInterrupting() == null) {
-            if (this.getObjToSee().getClass() == Planet.class)
+            if (this.getObjToSee().getClass() == CelestialBody.class)
                 return this.getHuman().getName() + " only can see " + this.getObjToSee().toString() + " through " + TypeThings.WINDOW;
             else
                 return this.getHuman().getName() + " sees " + this.getObjToSee().toString();
@@ -48,7 +46,7 @@ public class VisionManager {
             else
                 throw new ProblemSeeingObjException("are not in same place(room)");
         else if (objToSee.getClass() == Thing.class)
-            if (this.actualPlaceHasThing((Thing) objToSee))
+            if (this.getHuman().getActualPlace().hasThing((Thing) objToSee))
                 return true;
             else
                 throw new ProblemSeeingObjException("object is in different place");

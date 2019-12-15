@@ -1,69 +1,82 @@
 package ru.students.lab;
 
+import ru.students.lab.galaxy.Galaxy;
 import ru.students.lab.living.Human;
 import ru.students.lab.living.TypesFeelings;
 import ru.students.lab.locationTools.Coordinate;
 import ru.students.lab.locationTools.Place;
-import ru.students.lab.locationTools.VisionLinealFun;
-import ru.students.lab.planets.Planet;
-import ru.students.lab.planets.TypePlanets;
 import ru.students.lab.things.Thing;
 import ru.students.lab.things.TypeThings;
+import ru.students.lab.timeTools.TimeManager;
 import ru.students.lab.vehicles.*;
 
 public class Main {
 
     public static void main(String[] args) {
 		System.out.println();
-		Thing anyFood = new Thing("что-то", TypeThings.FOOD, 5, true, new Coordinate(11, 15));
+		Thing anyFood = new Thing("что-то", TypeThings.FOOD, 5, false, new Coordinate(11, 15));
 		Thing computer1 = new Thing("Central Computer", TypeThings.COMPUTER, 1, false, new Coordinate(30, 12));
 		Thing panel1 = new Thing("Central Panel", TypeThings.PANEL, 1, false, new Coordinate(30, 10));
-		Thing backWindow = new Thing("Back window", TypeThings.WINDOW, 1, false, new Coordinate(-60, 0));
-		Thing frontWindow1 = new Thing("Front Window", TypeThings.WINDOW, 1, true, new Coordinate(60, 1));
+		Thing backWindow = new Thing("Back window", TypeThings.WINDOW, 1, true, new Coordinate(-60, 0));
+		Thing frontWindow1 = new Thing("Sun Window", TypeThings.WINDOW, 1, true, new Coordinate(40, 10));
 		Thing frontWindow2 = new Thing("Front Window", TypeThings.WINDOW, 1, true, new Coordinate(60, 0));
 		Thing frontWindow3 = new Thing("Front Window", TypeThings.WINDOW, 1, true, new Coordinate(60, -1));
 
-		Place controlRoom = new Place("диспетчерская");
-		controlRoom.addThing(computer1);
-		controlRoom.addThing(panel1);
-		controlRoom.addThing(frontWindow1);
-		controlRoom.addThing(frontWindow2);
-		controlRoom.addThing(frontWindow3);
+		Place astronomicRoom = new Place("астрономическая");
+		astronomicRoom.addThing(computer1);
+		astronomicRoom.addThing(panel1);
+		astronomicRoom.addThing(frontWindow1);
+		astronomicRoom.addThing(frontWindow2);
+		astronomicRoom.addThing(frontWindow3);
 		Place dinningRoom = new Place("пищевой отсек");
 		dinningRoom.addThing(anyFood);
 		Place machinesRoom = new Place("машинный зал");
 		machinesRoom.addThing(backWindow);
 
-		Planet earth = new Planet(TypePlanets.EARTH, new Coordinate(-61, 0));
-		Planet moon = new Planet(TypePlanets.MOON, new Coordinate(400000, 0));
-		Trajectory earthToMoon = new Trajectory(earth, moon);
+		Galaxy milkyWay = new Galaxy("Млечный путь", Galaxy.Colors.BLACK);
+		Trajectory earthToMoon = new Trajectory(milkyWay.getCelestialBody("Земля"), milkyWay.getCelestialBody("Луна"));
 
 		Rocket rocket = new Rocket(TypeVehicles.ROCKET, 12, earthToMoon);
-		rocket.addRoom(controlRoom);
+		rocket.addRoom(astronomicRoom);
 		rocket.addRoom(dinningRoom);
 		rocket.addRoom(machinesRoom);
 
-		Human unknown = new Human("Незнайка", controlRoom, 2, new Coordinate(30, 0));
-		Human dunno = new Human("Пончик", dinningRoom, -5, false, new Coordinate(10, 15));
+		Human unknown = new Human("Незнайка", astronomicRoom, 2, new Coordinate(30, 0));
+		Human dunno = new Human("Пончик", dinningRoom, -5, new Coordinate(10, 15));
 
-		unknown.printStatus();
+
 		rocket.starts();
 		rocket.printTrajectory();
-		unknown.printLocation();
-		if (rocket.getMovingState().equals(MovingState.SLOW) || rocket.getMovingState().equals(MovingState.STAGNATION)) {
-			unknown.feels(TypesFeelings.STAGNATION);
-			System.out.println(unknown.getName() + " thinks " + rocket.getTypeVehicles().toString() + " has " + MovingState.STAGNATION + " velocity");
-			rocket.printLocation();
-		}
+		TimeManager.printActualPartDay();
+		dunno.feels(TypesFeelings.TRAPPED);
+		dunno.searchExit();
+		TimeManager.addTimElapsed(7);
+		rocket.moveForward(7);
 
-		unknown.sees(moon);
+		unknown.moves(dinningRoom, new Coordinate(0,0));
+		unknown.said(dunno, "go to rest");
+		dunno.setAwake(false);
+		unknown.moves(astronomicRoom, new Coordinate(30,0));
+		System.out.println("on the window all was dark and full of stars..");
+		unknown.sees(milkyWay.getCelestialBody("Cолнце"));
+		unknown.perceiveSize(milkyWay.getCelestialBody("Cолнце"));
+		unknown.perceiveSize(milkyWay.getCelestialBody("Луна"));
+
+		unknown.perceiveDetails(milkyWay.getCelestialBody("Луна"));
+		unknown.feels(TypesFeelings.DOUBTFUL);
+
+		System.out.println();
+		unknown.perceiveMovement(rocket);
+		rocket.printLocation();
+
+		unknown.sees(milkyWay.getCelestialBody("Луна"));
 		unknown.feels(TypesFeelings.INTEREST);
 
-		int timeElapsedOfTravel = 7;
-		rocket.addTimElapsed(timeElapsedOfTravel);
+		TimeManager.addTimElapsed(1);
+		rocket.moveForward(1);
 		rocket.printMovement();
-	    if (rocket.getTrajectory().getTimElapsed() > (2*3600)) {
-	    	unknown.timeToEat(timeElapsedOfTravel);
+	    if (TimeManager.getTimeElapsed() > 2) {
+	    	unknown.timeToEat();
 			unknown.moves(dinningRoom, new Coordinate(0,0));
 			dunno.wakesUp();
 			unknown.sees(dunno);

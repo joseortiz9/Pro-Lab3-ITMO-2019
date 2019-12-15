@@ -3,7 +3,7 @@ package ru.students.lab.vehicles;
 public enum MovingState {
     FAST("Fast"),
     SLOW("Slow"),
-    STAGNATION("No");
+    STAGNATION("stagnated");
 
     private final String name;
     MovingState(String name) {

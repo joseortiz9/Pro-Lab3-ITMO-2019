@@ -8,27 +8,23 @@ public class Rocket extends AbsVehicle {
 
     private ArrayList<Place> rooms;
     private Trajectory trajectory;
-    private MovingState movingState;
 
     public Rocket(TypeVehicles typeVehicles) {
-        super(typeVehicles);
+        super(typeVehicles, 0);
         this.rooms = new ArrayList<>();
         this.trajectory = null;
-        this.movingState = MovingState.STAGNATION;
     }
 
     public Rocket(TypeVehicles typeVehicles, int velocity, Trajectory trajectory) {
         super(typeVehicles, velocity);
         this.rooms = new ArrayList<>();
         this.trajectory = trajectory;
-        this.movingState = this.calcStateVelocity();
     }
 
     public Rocket(TypeVehicles typeVehicles, int velocity, Trajectory trajectory, ArrayList<Place> rooms) {
         super(typeVehicles, velocity);
         this.trajectory = trajectory;
         this.rooms = rooms;
-        this.movingState = this.calcStateVelocity();
     }
 
     public void addRoom(Place room) {
@@ -36,23 +32,24 @@ public class Rocket extends AbsVehicle {
     }
 
     //If the velocity is enought to arrive in less than an hour
+    @Override
     public boolean isVelocityBig() {
-        return this.getVelocity().getValue() > getTrajectory().calcDistance() / 60;
+        return this.getVelocity().getValue() > getTrajectory().getTotalDistance() / 60;
     }
 
+    @Override
     public MovingState calcStateVelocity() {
         if (this.getVelocity().getValue() == 0)
             return MovingState.STAGNATION;
         return (isVelocityBig()) ? MovingState.FAST : MovingState.SLOW ;
     }
 
-    public void addTimElapsed(double hours) {
-        this.getTrajectory().getNearDestiny(hours, this.getVelocity());
-        System.out.println("Passed " + hours + " hours inside " + this.getTypeVehicles().toString());
+    public void moveForward(int hours) {
+        this.getTrajectory().moveNearDestiny(hours, this.getVelocity());
     }
 
     public boolean overMiddleOfPath() {
-        return this.getTrajectory().getDistanceTraveled() > this.getTrajectory().calcDistance() / 2;
+        return this.getTrajectory().getDistanceTraveled() > this.getTrajectory().getTotalDistance() / 2;
     }
 
     public void starts() {
@@ -76,10 +73,6 @@ public class Rocket extends AbsVehicle {
 
     public Trajectory getTrajectory() {
         return trajectory;
-    }
-
-    public MovingState getMovingState() {
-        return movingState;
     }
 
     @Override
