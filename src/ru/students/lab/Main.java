@@ -18,6 +18,7 @@ import ru.students.lab.vehicles.*;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main {
 
@@ -125,8 +126,12 @@ public class Main {
 				this.classToCheck = classToCheck;
 			}
 			public boolean checkPerceptiveMethods() throws NoSuchMethodException {
-				ArrayList<Method> methods = new ArrayList<>();
-				return methods.contains(classToCheck.getDeclaredMethod("perceiveSize", void.class));
+				Method[] methods = classToCheck.getDeclaredMethods();
+				for (Method method: methods) {
+					if (method.getName().equals("perceiveSize"))
+						return true;
+				}
+				return false;
 			}
 		}
 
@@ -150,7 +155,7 @@ public class Main {
 			System.out.println(e.getMessage());
 		}
 
-		
+
 		rocket.printLocation();
 
 		unknown.sees(milkyWay.getCelestialBody("Луна"));
