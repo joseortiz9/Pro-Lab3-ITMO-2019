@@ -1,18 +1,27 @@
 package ru.students.lab;
 
+import ru.students.lab.exceptions.NotPerceptiveHumanException;
+import ru.students.lab.exceptions.PerceivingCelBodyException;
+import ru.students.lab.galaxy.CelestialBody;
 import ru.students.lab.galaxy.Galaxy;
 import ru.students.lab.living.Human;
+import ru.students.lab.living.InterPerception;
 import ru.students.lab.living.TypesFeelings;
 import ru.students.lab.locationTools.Coordinate;
+import ru.students.lab.locationTools.InterLocationUtilities;
 import ru.students.lab.locationTools.Place;
+import ru.students.lab.sensesTools.CelBodyPerceptionManager;
 import ru.students.lab.things.Thing;
 import ru.students.lab.things.TypeThings;
 import ru.students.lab.timeTools.TimeManager;
 import ru.students.lab.vehicles.*;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NotPerceptiveHumanException {
 		System.out.println();
 		Thing anyFood = new Thing("что-то", TypeThings.FOOD, 5, false, new Coordinate(11, 15));
 		Thing computer1 = new Thing("Central Computer", TypeThings.COMPUTER, 1, false, new Coordinate(30, 12));
@@ -41,8 +50,49 @@ public class Main {
 		rocket.addRoom(dinningRoom);
 		rocket.addRoom(machinesRoom);
 
-		Human unknown = new Human("Незнайка", astronomicRoom, 2, new Coordinate(30, 0));
-		Human dunno = new Human("Пончик", dinningRoom, -5, new Coordinate(10, 15));
+
+		class PerceptiveHuman extends Human implements InterPerception {
+			private CelBodyPerceptionManager celBodyPerceptionManager;
+			public PerceptiveHuman(String name, Place place, int timeLastFood, boolean awake, Coordinate location) {
+				super(name, place, timeLastFood, awake, location);
+				this.celBodyPerceptionManager = null;
+			}
+			@Override
+			public void perceiveSize(CelestialBody celBody) {
+				try {
+					this.celBodyPerceptionManager = new CelBodyPerceptionManager(this, celBody);
+					System.out.println(celBodyPerceptionManager.getPerceptionOfSize());
+
+				} catch (PerceivingCelBodyException e) {
+					System.out.println(this.getName() + "can not perceive size of " + celBody.toString() +
+							" because " + e.getMessage());
+				}
+			}
+			@Override
+			public void perceiveDetails(CelestialBody celBody) {
+				try {
+					this.celBodyPerceptionManager = new CelBodyPerceptionManager(this, celBody);
+					this.celBodyPerceptionManager.perceiveDetails();
+
+				} catch (PerceivingCelBodyException e) {
+					System.out.println(this.getName() + "can not perceive details of " + celBody.toString() +
+							" because " + e.getMessage());
+				}
+			}
+			@Override
+			public void perceiveMovement(AbsVehicle vehicle) {
+				if (vehicle.getMovingState().equals(MovingState.SLOW) || vehicle.getMovingState().equals(MovingState.STAGNATION)) {
+					//this.feels(TypesFeelings.STAGNATION);
+					if (!vehicle.isVelocityBig())
+						System.out.println("Velocity is not fast enough");
+					System.out.println(this.getName() + " perceives " + vehicle.getTypeVehicles().toString() + " is " + MovingState.STAGNATION);
+				}
+			}
+
+		}
+
+		PerceptiveHuman unknown = new PerceptiveHuman("Незнайка", astronomicRoom, 2, true, new Coordinate(30, 0));
+		PerceptiveHuman dunno = new PerceptiveHuman("Пончик", dinningRoom, -5, true, new Coordinate(10, 15));
 
 
 		rocket.starts();
@@ -53,20 +103,54 @@ public class Main {
 		TimeManager.addTimElapsed(7);
 		rocket.moveForward(7);
 
-		unknown.moves(dinningRoom, new Coordinate(0,0));
+
+		final InterLocationUtilities centerRocket = new InterLocationUtilities() {
+			@Override
+			public Coordinate getLocation() {
+				return new Coordinate(0,0);
+			}
+		};
+
+		unknown.moves(dinningRoom, centerRocket.getLocation());
 		unknown.said(dunno, "go to rest");
 		dunno.setAwake(false);
 		unknown.moves(astronomicRoom, new Coordinate(30,0));
 		System.out.println("on the window all was dark and full of stars..");
 		unknown.sees(milkyWay.getCelestialBody("Cолнце"));
-		unknown.perceiveSize(milkyWay.getCelestialBody("Cолнце"));
-		unknown.perceiveSize(milkyWay.getCelestialBody("Луна"));
 
-		unknown.perceiveDetails(milkyWay.getCelestialBody("Луна"));
-		unknown.feels(TypesFeelings.DOUBTFUL);
 
-		System.out.println();
-		unknown.perceiveMovement(rocket);
+		class ClassPerceptiveChecker {
+			private Class classToCheck;
+			public ClassPerceptiveChecker(Class classToCheck) {
+				this.classToCheck = classToCheck;
+			}
+			public boolean checkPerceptiveMethods() throws NoSuchMethodException {
+				ArrayList<Method> methods = new ArrayList<>();
+				return methods.contains(classToCheck.getDeclaredMethod("perceiveSize", void.class));
+			}
+		}
+
+		try {
+			ClassPerceptiveChecker checker = new ClassPerceptiveChecker(unknown.getClass());
+			if (checker.checkPerceptiveMethods()) {
+				unknown.perceiveSize(milkyWay.getCelestialBody("Cолнце"));
+				unknown.perceiveSize(milkyWay.getCelestialBody("Луна"));
+
+				unknown.perceiveDetails(milkyWay.getCelestialBody("Луна"));
+				unknown.feels(TypesFeelings.DOUBTFUL);
+
+				System.out.println();
+				unknown.perceiveMovement(rocket);
+			}
+			else
+				throw new NotPerceptiveHumanException();
+		} catch (NotPerceptiveHumanException e) {
+			System.out.println(unknown.getName() + e.getMessage());
+		} catch (NoSuchMethodException e) {
+			System.out.println(e.getMessage());
+		}
+
+		
 		rocket.printLocation();
 
 		unknown.sees(milkyWay.getCelestialBody("Луна"));

@@ -14,7 +14,7 @@ import ru.students.lab.timeTools.TimeManager;
 import ru.students.lab.vehicles.AbsVehicle;
 import ru.students.lab.vehicles.MovingState;
 
-public class Human implements InterCreature, InterBasicActions, InterPerception, InterLocationUtilities {
+public class Human implements InterCreature, InterBasicActions, /*InterPerception,*/ InterLocationUtilities {
 
     private String name;
     private int timeLastFood;
@@ -23,7 +23,8 @@ public class Human implements InterCreature, InterBasicActions, InterPerception,
     private Coordinate location;
     private boolean awake;
     private VisionManager visionManager;
-    private CelBodyPerceptionManager celBodyPerceptionManager;
+    //private boolean perceptive;
+    //private CelBodyPerceptionManager celBodyPerceptionManager;
 
     public Human(String name, Place place, int timeLastFood, Coordinate location) {
         this.name = name;
@@ -33,7 +34,8 @@ public class Human implements InterCreature, InterBasicActions, InterPerception,
         this.awake = true;
         this.location = location;
         this.visionManager = null;
-        this.celBodyPerceptionManager = null;
+        //this.perceptive = false;
+        //this.celBodyPerceptionManager = null;
     }
 
     public Human(String name, Place place, int timeLastFood, boolean awake, Coordinate location) {
@@ -44,7 +46,7 @@ public class Human implements InterCreature, InterBasicActions, InterPerception,
         this.awake = awake;
         this.location = location;
         this.visionManager = null;
-        this.celBodyPerceptionManager = null;
+        //this.celBodyPerceptionManager = null;
     }
 
     // The rocket is the time zero, so timeLastFood depends on how much hours before
@@ -115,42 +117,6 @@ public class Human implements InterCreature, InterBasicActions, InterPerception,
 
 
     @Override
-    public void perceiveSize(CelestialBody celBody) {
-        try {
-            this.celBodyPerceptionManager = new CelBodyPerceptionManager(this, celBody);
-            System.out.println(celBodyPerceptionManager.getPerceptionOfSize());
-
-        } catch (PerceivingCelBodyException e) {
-            System.out.println(this.getName() + "can not perceive size of " + celBody.toString() +
-                    " because " + e.getMessage());
-        }
-    }
-
-    @Override
-    public void perceiveDetails(CelestialBody celBody) {
-        try {
-            this.celBodyPerceptionManager = new CelBodyPerceptionManager(this, celBody);
-            this.celBodyPerceptionManager.perceiveDetails();
-
-        } catch (PerceivingCelBodyException e) {
-            System.out.println(this.getName() + "can not perceive details of " + celBody.toString() +
-                    " because " + e.getMessage());
-        }
-    }
-
-
-    @Override
-    public void perceiveMovement(AbsVehicle vehicle) {
-        if (vehicle.getMovingState().equals(MovingState.SLOW) || vehicle.getMovingState().equals(MovingState.STAGNATION)) {
-            //this.feels(TypesFeelings.STAGNATION);
-            if (!vehicle.isVelocityBig())
-                System.out.println("Velocity is not fast enough");
-            System.out.println(this.getName() + " perceives " + vehicle.getTypeVehicles().toString() + " is " + MovingState.STAGNATION);
-        }
-    }
-
-
-    @Override
     public void wakesUp() {
         if (!this.isAwake()) {
             this.setAwake(true);
@@ -181,6 +147,8 @@ public class Human implements InterCreature, InterBasicActions, InterPerception,
     public void setActualPlace(Place actualPlace) {
         this.actualPlace = actualPlace;
     }
+
+
 
     public void setLocation(Coordinate location) {
         this.location = location;
